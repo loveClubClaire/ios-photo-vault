@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		C080EFDB1E5EA5590072C55F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080EFDA1E5EA5590072C55F /* AppDelegate.swift */; };
-		C080EFDD1E5EA5590072C55F /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080EFDC1E5EA5590072C55F /* FirstViewController.swift */; };
-		C080EFDF1E5EA5590072C55F /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080EFDE1E5EA5590072C55F /* SecondViewController.swift */; };
 		C080EFE21E5EA5590072C55F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C080EFE01E5EA5590072C55F /* Main.storyboard */; };
 		C080EFE41E5EA5590072C55F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C080EFE31E5EA5590072C55F /* Assets.xcassets */; };
 		C080EFE71E5EA5590072C55F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C080EFE51E5EA5590072C55F /* LaunchScreen.storyboard */; };
 		C080EFF21E5EA5590072C55F /* Photo_VaultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080EFF11E5EA5590072C55F /* Photo_VaultTests.swift */; };
+		C080EFFF1E5F8E620072C55F /* AlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080EFFE1E5F8E620072C55F /* AlbumTableViewController.swift */; };
+		C080F0011E5F8E790072C55F /* AlbumTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F0001E5F8E790072C55F /* AlbumTableViewCell.swift */; };
+		C080F0031E5F94D80072C55F /* PhotosCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F0021E5F94D80072C55F /* PhotosCollectionViewController.swift */; };
+		C080F0051E5F95A70072C55F /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F0041E5F95A70072C55F /* PhotoCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,8 +31,6 @@
 /* Begin PBXFileReference section */
 		C080EFD71E5EA5590072C55F /* Photo Vault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Photo Vault.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C080EFDA1E5EA5590072C55F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		C080EFDC1E5EA5590072C55F /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		C080EFDE1E5EA5590072C55F /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		C080EFE11E5EA5590072C55F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C080EFE31E5EA5590072C55F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C080EFE61E5EA5590072C55F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -38,6 +38,10 @@
 		C080EFED1E5EA5590072C55F /* Photo VaultTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Photo VaultTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C080EFF11E5EA5590072C55F /* Photo_VaultTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo_VaultTests.swift; sourceTree = "<group>"; };
 		C080EFF31E5EA5590072C55F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C080EFFE1E5F8E620072C55F /* AlbumTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumTableViewController.swift; sourceTree = "<group>"; };
+		C080F0001E5F8E790072C55F /* AlbumTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumTableViewCell.swift; sourceTree = "<group>"; };
+		C080F0021E5F94D80072C55F /* PhotosCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewController.swift; sourceTree = "<group>"; };
+		C080F0041E5F95A70072C55F /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,8 +84,8 @@
 			isa = PBXGroup;
 			children = (
 				C080EFDA1E5EA5590072C55F /* AppDelegate.swift */,
-				C080EFDC1E5EA5590072C55F /* FirstViewController.swift */,
-				C080EFDE1E5EA5590072C55F /* SecondViewController.swift */,
+				C080EFFC1E5F8DFF0072C55F /* TableViewControllers */,
+				C080EFFD1E5F8E0F0072C55F /* TableViewCells */,
 				C080EFE01E5EA5590072C55F /* Main.storyboard */,
 				C080EFE31E5EA5590072C55F /* Assets.xcassets */,
 				C080EFE51E5EA5590072C55F /* LaunchScreen.storyboard */,
@@ -97,6 +101,24 @@
 				C080EFF31E5EA5590072C55F /* Info.plist */,
 			);
 			path = "Photo VaultTests";
+			sourceTree = "<group>";
+		};
+		C080EFFC1E5F8DFF0072C55F /* TableViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				C080EFFE1E5F8E620072C55F /* AlbumTableViewController.swift */,
+				C080F0021E5F94D80072C55F /* PhotosCollectionViewController.swift */,
+			);
+			name = TableViewControllers;
+			sourceTree = "<group>";
+		};
+		C080EFFD1E5F8E0F0072C55F /* TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				C080F0041E5F95A70072C55F /* PhotoCollectionViewCell.swift */,
+				C080F0001E5F8E790072C55F /* AlbumTableViewCell.swift */,
+			);
+			name = TableViewCells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -203,9 +225,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C080EFDF1E5EA5590072C55F /* SecondViewController.swift in Sources */,
 				C080EFDB1E5EA5590072C55F /* AppDelegate.swift in Sources */,
-				C080EFDD1E5EA5590072C55F /* FirstViewController.swift in Sources */,
+				C080F0051E5F95A70072C55F /* PhotoCollectionViewCell.swift in Sources */,
+				C080EFFF1E5F8E620072C55F /* AlbumTableViewController.swift in Sources */,
+				C080F0011E5F8E790072C55F /* AlbumTableViewCell.swift in Sources */,
+				C080F0031E5F94D80072C55F /* PhotosCollectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
