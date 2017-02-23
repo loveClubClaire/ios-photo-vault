@@ -1,2 +1,2 @@
-# iOS_filesystem_viewer
-iOS 10 application for viewing the filesystem. Swift 3
+# iOS_photo_vault
+iOS 10 application for securely storing photos. Swift 3
