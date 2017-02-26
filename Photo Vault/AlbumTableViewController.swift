@@ -98,5 +98,53 @@ class AlbumTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    // MARK: - Actions
+    var saveButton: UIAlertAction? = nil
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+
+        let alertController = UIAlertController(title: "New Album", message: "Enter a name for this album", preferredStyle: .alert)
+        
+        alertController.addTextField { (textField : UITextField!) -> Void in
+            textField.placeholder = "Title"
+            textField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: .editingChanged)
+
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: {
+            (action : UIAlertAction!) -> Void in
+        })
+        
+        
+        let saveAction = UIAlertAction(title: "Save", style: .default, handler: {
+            alert -> Void in
+            
+            let firstTextField = alertController.textFields![0] as UITextField
+    
+            print("firstName \(firstTextField.text)")
+        })
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        
+
+        
+        alertController.actions[1].isEnabled = false
+        saveButton = alertController.actions[1]
+        self.present(alertController, animated: true, completion: nil)
+        
+        
+        
+    }
+    
+    func textFieldDidChange(_ textField: UITextField) {
+        if textField.text != "" {
+            saveButton?.isEnabled = true
+        }
+        else{
+            saveButton?.isEnabled = false
+        }
+    }
+
 
 }

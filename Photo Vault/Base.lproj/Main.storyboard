@@ -49,7 +49,13 @@
                             <outlet property="delegate" destination="HNk-kk-Tdw" id="OG4-ZT-ZLx"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="5Iw-UD-XlW"/>
+                    <navigationItem key="navigationItem" id="5Iw-UD-XlW">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="sI8-Vw-yxq">
+                            <connections>
+                                <action selector="addButtonPressed:" destination="HNk-kk-Tdw" id="dRu-Fu-zoQ"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bbs-dY-jRA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -114,6 +120,7 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="d3L-Ri-XZ6" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="42K-xp-AQs">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
