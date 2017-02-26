@@ -118,10 +118,9 @@ class AlbumTableViewController: UITableViewController {
         
         let saveAction = UIAlertAction(title: "Save", style: .default, handler: {
             alert -> Void in
-            
             let firstTextField = alertController.textFields![0] as UITextField
-    
-            print("firstName \(firstTextField.text)")
+            self.albums.append(firstTextField.text!)
+            self.tableView.reloadData()
         })
         
         alertController.addAction(cancelAction)
