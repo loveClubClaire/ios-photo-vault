@@ -8,9 +8,10 @@
 
 import UIKit
 
+
 private let reuseIdentifier = "Cell"
 
-class PhotosCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class PhotosCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,5 +116,4 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     
     }
     */
-
 }
