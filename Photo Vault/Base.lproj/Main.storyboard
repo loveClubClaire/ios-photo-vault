@@ -151,6 +151,7 @@
                                 <connections>
                                     <outlet property="albumName" destination="mex-yv-eNG" id="v4A-aq-Dve"/>
                                     <outlet property="thumbnail" destination="tyZ-Wa-PKd" id="E4Y-T5-G8r"/>
+                                    <segue destination="ngC-Ob-bwg" kind="show" identifier="photoSelectorShowPhotos" id="WmE-IU-bbg"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -170,6 +171,54 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jpH-bH-hoA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5216.8000000000002" y="947.67616191904051"/>
+        </scene>
+        <!--Photo Selector Collection View Controller-->
+        <scene sceneID="bqF-z7-qDH">
+            <objects>
+                <collectionViewController id="ngC-Ob-bwg" customClass="PhotoSelectorCollectionViewController" customModule="Photo_Vault" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="p4D-9Z-KPs">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="NCv-cQ-Jmz">
+                            <size key="itemSize" width="103" height="103"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="selectorCell" id="2b9-Nw-PVs" customClass="PhotoSelectorCollectionViewCell" customModule="Photo_Vault" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="103" height="103"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="103" height="103"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="C7X-Ha-NU7">
+                                            <rect key="frame" x="0.0" y="0.0" width="103" height="103"/>
+                                        </imageView>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="C7X-Ha-NU7" firstAttribute="top" secondItem="2b9-Nw-PVs" secondAttribute="top" id="Hw0-Hw-hHJ"/>
+                                    <constraint firstAttribute="trailing" secondItem="C7X-Ha-NU7" secondAttribute="trailing" id="fiH-Hy-RYh"/>
+                                    <constraint firstAttribute="bottom" secondItem="C7X-Ha-NU7" secondAttribute="bottom" id="mqj-Vj-3oM"/>
+                                    <constraint firstItem="C7X-Ha-NU7" firstAttribute="leading" secondItem="2b9-Nw-PVs" secondAttribute="leading" id="ynN-Wz-nUJ"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="imageView" destination="C7X-Ha-NU7" id="1M3-wX-YIR"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="ngC-Ob-bwg" id="ieY-AO-0vl"/>
+                            <outlet property="delegate" destination="ngC-Ob-bwg" id="85L-cw-b6B"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1xl-HT-3YP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6368.8000000000002" y="947.67616191904051"/>
         </scene>
         <!--Item-->
         <scene sceneID="wPp-P6-Dfu">

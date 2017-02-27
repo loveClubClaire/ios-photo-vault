@@ -99,15 +99,29 @@ class PhotoSelectorTableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        super.prepare(for: segue, sender: sender)        
+        switch (segue.identifier ?? "") {
+        case "photoSelectorShowPhotos":
+            guard let viewController = segue.destination as? PhotoSelectorCollectionViewController else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            guard let selectedTimerCell = sender as? PhotoSelectorTableViewCell else {
+                fatalError("Unexpected sender: \(sender)")
+            }
+            guard let indexPath = tableView.indexPath(for: selectedTimerCell) else {
+                fatalError("The selected cell is not being displayed by the table")
+            }
+            viewController.images = getAlbumPhotos(anAlbum: photoAlbums[indexPath.row].identifier)
+        default:
+            fatalError("Unexpected Segue Identifier; \(segue.identifier)")
+        }
     }
-    */
+    
     
     @IBAction func cancel(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
