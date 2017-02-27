@@ -13,6 +13,8 @@ private let reuseIdentifier = "selectorCell"
 
 class PhotoSelectorCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    var selectedImages = [Int]()
+    
     /*
      This value is either passed by `PhotoSelectorTableViewController` in `prepare(for:sender:)`
      */
@@ -20,7 +22,11 @@ class PhotoSelectorCollectionViewController: UICollectionViewController, UIColle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        //Add the save bar button item to the navigation bar. Save button is initally disabled because no images are selected yet
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(save))
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        //Allow multiple images to be selected
+        self.collectionView?.allowsMultipleSelection = true
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
                 
@@ -41,6 +47,11 @@ class PhotoSelectorCollectionViewController: UICollectionViewController, UIColle
      // Pass the selected object to the new view controller.
      }
      */
+    
+    func save(){
+        print(selectedImages)
+        dismiss(animated: true, completion: nil)
+    }
     
     // MARK: UICollectionViewDataSource
     
@@ -98,12 +109,25 @@ class PhotoSelectorCollectionViewController: UICollectionViewController, UIColle
      }
      */
     
-    /*
+    
      // Uncomment this method to specify if the specified item should be selected
      override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-     return true
+        return true
      }
-     */
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if selectedImages.count == 0 {
+            navigationItem.rightBarButtonItem?.isEnabled = true
+        }
+        selectedImages.append(indexPath.row)
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        selectedImages.remove(object: indexPath.row)
+        if selectedImages.count == 0 {
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        }
+    }
     
     /*
      // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item

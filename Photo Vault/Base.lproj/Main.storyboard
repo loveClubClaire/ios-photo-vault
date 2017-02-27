@@ -176,7 +176,7 @@
         <scene sceneID="bqF-z7-qDH">
             <objects>
                 <collectionViewController id="ngC-Ob-bwg" customClass="PhotoSelectorCollectionViewController" customModule="Photo_Vault" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="p4D-9Z-KPs">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="p4D-9Z-KPs">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -215,6 +215,7 @@
                             <outlet property="delegate" destination="ngC-Ob-bwg" id="85L-cw-b6B"/>
                         </connections>
                     </collectionView>
+                    <toolbarItems/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1xl-HT-3YP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
