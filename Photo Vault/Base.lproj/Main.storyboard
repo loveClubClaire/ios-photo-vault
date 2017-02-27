@@ -113,30 +113,40 @@
         <scene sceneID="R6g-CB-CAW">
             <objects>
                 <tableViewController id="I4L-QB-9Oe" customClass="PhotoSelectorTableViewController" customModule="Photo_Vault" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="135" sectionHeaderHeight="28" sectionFooterHeight="28" id="7N9-YK-Ldc">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="110" sectionHeaderHeight="28" sectionFooterHeight="28" id="7N9-YK-Ldc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AlbumSelectorCell" rowHeight="135" id="QPz-fG-97l" customClass="PhotoSelectorTableViewCell" customModule="Photo_Vault" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="135"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="AlbumSelectorCell" rowHeight="107" id="QPz-fG-97l" customClass="PhotoSelectorTableViewCell" customModule="Photo_Vault" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="107"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QPz-fG-97l" id="6xk-2P-Ara">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="134"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="342" height="106"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tyZ-Wa-PKd">
-                                            <rect key="frame" x="8" y="8" width="118" height="118"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Test" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mex-yv-eNG">
-                                            <rect key="frame" x="134" y="57" width="233" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Test" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mex-yv-eNG">
+                                            <rect key="frame" x="106" y="43.5" width="228" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tyZ-Wa-PKd">
+                                            <rect key="frame" x="8" y="8" width="90" height="91"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="90" id="HLV-5G-VPl"/>
+                                            </constraints>
+                                        </imageView>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="mex-yv-eNG" firstAttribute="trailing" secondItem="6xk-2P-Ara" secondAttribute="trailingMargin" id="fXs-xU-Ik8"/>
+                                        <constraint firstItem="tyZ-Wa-PKd" firstAttribute="centerY" secondItem="mex-yv-eNG" secondAttribute="centerY" id="ifY-iX-t0H"/>
+                                        <constraint firstItem="mex-yv-eNG" firstAttribute="leading" secondItem="tyZ-Wa-PKd" secondAttribute="trailing" constant="8" id="mp7-rK-U5W"/>
+                                        <constraint firstItem="mex-yv-eNG" firstAttribute="leading" secondItem="tyZ-Wa-PKd" secondAttribute="trailing" constant="8" id="rrb-qz-WRJ"/>
+                                        <constraint firstItem="tyZ-Wa-PKd" firstAttribute="leading" secondItem="6xk-2P-Ara" secondAttribute="leadingMargin" id="uVh-wh-hP9"/>
+                                        <constraint firstItem="tyZ-Wa-PKd" firstAttribute="bottom" secondItem="6xk-2P-Ara" secondAttribute="bottomMargin" id="yKm-Cd-yg4"/>
+                                        <constraint firstItem="tyZ-Wa-PKd" firstAttribute="top" secondItem="6xk-2P-Ara" secondAttribute="topMargin" id="zPF-qd-szX"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="albumName" destination="mex-yv-eNG" id="v4A-aq-Dve"/>
