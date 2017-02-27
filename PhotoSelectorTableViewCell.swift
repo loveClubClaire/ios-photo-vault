@@ -9,6 +9,8 @@
 import UIKit
 
 class PhotoSelectorTableViewCell: UITableViewCell {
+    @IBOutlet weak var thumbnail: UIImageView!
+    @IBOutlet weak var albumName: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

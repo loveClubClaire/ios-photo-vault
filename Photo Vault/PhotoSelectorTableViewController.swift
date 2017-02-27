@@ -11,9 +11,20 @@ import Photos
 
 class PhotoSelectorTableViewController: UITableViewController {
 
+    struct photoAlbum {
+        var identifier:PHAssetCollection
+        var name:String
+        var thumbnail:UIImage
+        var photoCount: Int
+    }
+    
+    var photoAlbums = [photoAlbum]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        photoAlbums = fetchAlbums()
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -29,24 +40,29 @@ class PhotoSelectorTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return photoAlbums.count
     }
 
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
+        //Table view cells are reused and should be dequeued using a cell identifier.
+        let cellIdentifier = "AlbumSelectorCell"
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? PhotoSelectorTableViewCell  else {
+            fatalError("The dequeued cell is not an instance of PhotoSelectorTableViewCell.")
+        }
+        
+        // Fetches the appropriate meal for the data source layout.
+        let album = photoAlbums[indexPath.row]
+        cell.albumName.text = album.name + " (" + String(album.photoCount) + ")"
+        cell.thumbnail.image = album.thumbnail
         return cell
     }
-    */
+    
 
     /*
     // Override to support conditional editing of the table view.
@@ -92,32 +108,52 @@ class PhotoSelectorTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    @IBAction func cancel(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     //MARK: - Photo Delegates
-    func fetchAlbums(){
-        
+    func fetchAlbums() -> [photoAlbum]{
+        var result = [photoAlbum]()
         let otherfetchOptions = PHFetchOptions()
-        let smartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: otherfetchOptions)
-        smartAlbums.enumerateObjects({ (object, index, stop) -> Void in
-            
-            let fetchResult = PHAsset.fetchAssets(in: object, options: nil)
-            
-            if fetchResult.count > 0{
-                print(object.localizedTitle ?? "Null Value")
-                let images = self.getAlbumPhotos(anAlbum: object)
+        let albums = [PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: otherfetchOptions),PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: otherfetchOptions)]
+        
+        for album in albums{
+            album.enumerateObjects({ (object, index, stop) -> Void in
+                let fetchResult = PHAsset.fetchAssets(in: object, options: nil)
+                if fetchResult.count > 0{
+                    let thumbnail = self.getAlbumThumbnail(anAlbum: object)
+                    let newPhotoAlbum = photoAlbum.init(identifier: object , name: object.localizedTitle!, thumbnail: thumbnail, photoCount: fetchResult.count)
+                    result.append(newPhotoAlbum)
+                }
+            })
+        }
+        return result
+    }
+    
+    func getAlbumThumbnail(anAlbum: PHAssetCollection) -> UIImage{
+        var thumbnail = UIImage()
+        let photoAssets = PHAsset.fetchAssets(in: anAlbum, options: nil) as! PHFetchResult<AnyObject>
+        let imageManager = PHCachingImageManager()
+        
+        photoAssets.enumerateObjects({(object, count, stop) in
+            if let asset = object as? PHAsset{
+                let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                
+                /* For faster performance, and maybe degraded image */
+                let options = PHImageRequestOptions()
+                options.deliveryMode = .fastFormat
+                options.isSynchronous = true
+                
+                imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
+                    (image, info) -> Void in
+                    thumbnail = image!
+                    stop[0] = false
+                })
             }
-            
         })
-        
-        
-        
-        
-        //        let fetchOptions = PHFetchOptions()
-        //        let collection:PHFetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
-        //        collection.enumerateObjects({ (object, index, stop) -> Void in
-        //            if object.estimatedAssetCount != 0{
-        //                print(object.localizedTitle ?? "Null Value")
-        //            }
-        //        })
+        return thumbnail
     }
     
     func getAlbumPhotos(anAlbum: PHAssetCollection) -> [UIImage]{
