@@ -22,6 +22,7 @@ class PhotoSelectorTableViewController: UITableViewController {
         var photoCount: Int
     }
     
+    var photosCollectionViewController: PhotosCollectionViewController?
     var photoAlbums = [photoAlbum]()
     
     override func viewDidLoad() {
@@ -121,6 +122,7 @@ class PhotoSelectorTableViewController: UITableViewController {
                 fatalError("The selected cell is not being displayed by the table")
             }
             viewController.images = getAlbumPhotos(anAlbum: photoAlbums[indexPath.row].identifier)
+            viewController.photosCollectionViewController = self.photosCollectionViewController
         default:
             fatalError("Unexpected Segue Identifier; \(segue.identifier)")
         }
@@ -175,8 +177,13 @@ class PhotoSelectorTableViewController: UITableViewController {
         
         photoAssets.enumerateObjects({(object, count, stop) in
             if let asset = object as? PHAsset{
-                //TODO: Make this more dynamic
-                let imageSize = CGSize(width: 200, height: 200)
+                //Make the image size the exact size of the cell. Do it for speed. "Gotta go fast"
+                let itemsPerRow: CGFloat = 4
+                var widthPerItem = floor(self.view.frame.width / itemsPerRow)
+                if widthPerItem == self.view.frame.width / itemsPerRow {
+                    widthPerItem = widthPerItem - 0.5
+                }
+                let imageSize = CGSize(width: widthPerItem, height: widthPerItem)
                 
                 /* For faster performance, and maybe degraded image */
                 let options = PHImageRequestOptions()
@@ -186,7 +193,6 @@ class PhotoSelectorTableViewController: UITableViewController {
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
                     (image, info) -> Void in
                     albumImages.append(image!)
-                    //print(info ?? "No Info")
                 })
             }
         })

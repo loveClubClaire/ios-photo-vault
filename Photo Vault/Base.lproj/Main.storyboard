@@ -98,7 +98,7 @@
                             <barButtonItem systemItem="add" id="QRB-QA-HUg">
                                 <connections>
                                     <action selector="addButton:" destination="jRU-I1-uZJ" id="SON-ug-qDu"/>
-                                    <segue destination="3rF-Ui-LnA" kind="show" id="Fhm-zZ-5G0"/>
+                                    <segue destination="3rF-Ui-LnA" kind="show" identifier="addPhotos" id="Fhm-zZ-5G0"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>

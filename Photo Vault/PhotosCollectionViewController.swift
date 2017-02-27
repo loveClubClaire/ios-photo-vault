@@ -13,6 +13,8 @@ private let reuseIdentifier = "Cell"
 
 class PhotosCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
+    var selectedImages = [Int]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -30,17 +32,27 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         // Dispose of any resources that can be recreated.
     }
 
-    /*
+    
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
+        super.prepare(for: segue, sender: sender)
+        switch (segue.identifier ?? "") {
+        case "addPhotos":
+        guard let viewController = segue.destination.childViewControllers.first as? PhotoSelectorTableViewController else {
+            fatalError("Unexpected destination: \(segue.destination)")
+        }
+        viewController.photosCollectionViewController = self
+        default:
+            fatalError("Unexpected Segue Identifier; \(segue.identifier)")
+        }
     }
-    */
+    
+    override func viewWillAppear(_ animated: Bool) {
+        print("Hello everyone!")
+        print(selectedImages)
+    }
 
-    // MARK: UICollectionViewDataSource
+    // MARK: - UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -60,7 +72,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         return cell
     }
 
-    // MARK: UICollectionViewDelegateFlowLayout
+    // MARK: - UICollectionViewDelegateFlowLayout
     let itemsPerRow: CGFloat = 4
     let sectionInsets = UIEdgeInsets(top: 1.0, left: 0, bottom: 0, right: 0)
     
@@ -86,7 +98,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     }
     
     
-    // MARK: UICollectionViewDelegate
+    // MARK: - UICollectionViewDelegate
 
     /*
     // Uncomment this method to specify if the specified item should be highlighted during tracking

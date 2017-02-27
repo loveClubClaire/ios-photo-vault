@@ -19,6 +19,7 @@ class PhotoSelectorCollectionViewController: UICollectionViewController, UIColle
      This value is either passed by `PhotoSelectorTableViewController` in `prepare(for:sender:)`
      */
     var images = [UIImage]()
+    var photosCollectionViewController: PhotosCollectionViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +50,7 @@ class PhotoSelectorCollectionViewController: UICollectionViewController, UIColle
      */
     
     func save(){
-        print(selectedImages)
+        photosCollectionViewController?.selectedImages = selectedImages
         dismiss(animated: true, completion: nil)
     }
     
