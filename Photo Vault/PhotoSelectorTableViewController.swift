@@ -5,6 +5,10 @@
 //  Created by Zachary Whitten on 2/26/17.
 //  Copyright © 2017 16^2. All rights reserved.
 //
+//
+//      let startTime = CACurrentMediaTime()
+//      print("\(startTime)")
+
 
 import UIKit
 import Photos
@@ -132,7 +136,6 @@ class PhotoSelectorTableViewController: UITableViewController {
         var result = [photoAlbum]()
         let otherfetchOptions = PHFetchOptions()
         let albums = [PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: otherfetchOptions),PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: otherfetchOptions)]
-        
         for album in albums{
             album.enumerateObjects({ (object, index, stop) -> Void in
                 let fetchResult = PHAsset.fetchAssets(in: object, options: nil)
@@ -146,26 +149,21 @@ class PhotoSelectorTableViewController: UITableViewController {
         return result
     }
     
+    
     func getAlbumThumbnail(anAlbum: PHAssetCollection) -> UIImage{
         var thumbnail = UIImage()
         let photoAssets = PHAsset.fetchAssets(in: anAlbum, options: nil) as! PHFetchResult<AnyObject>
         let imageManager = PHCachingImageManager()
         
-        photoAssets.enumerateObjects({(object, count, stop) in
-            if let asset = object as? PHAsset{
-                let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
-                
-                /* For faster performance, and maybe degraded image */
-                let options = PHImageRequestOptions()
-                options.deliveryMode = .fastFormat
-                options.isSynchronous = true
-                
-                imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
-                    (image, info) -> Void in
-                    thumbnail = image!
-                    stop[0] = false
-                })
-            }
+        let options = PHImageRequestOptions()
+        options.deliveryMode = .fastFormat
+        options.isSynchronous = true
+
+        //TODO: Make this more dynamic
+        let imageSize = CGSize(width: 200, height: 200)
+        
+        imageManager.requestImage(for: photoAssets.lastObject as! PHAsset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {(image, info) -> Void in
+            thumbnail = image!
         })
         return thumbnail
     }
@@ -177,7 +175,8 @@ class PhotoSelectorTableViewController: UITableViewController {
         
         photoAssets.enumerateObjects({(object, count, stop) in
             if let asset = object as? PHAsset{
-                let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                //TODO: Make this more dynamic
+                let imageSize = CGSize(width: 200, height: 200)
                 
                 /* For faster performance, and maybe degraded image */
                 let options = PHImageRequestOptions()
