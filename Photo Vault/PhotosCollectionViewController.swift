@@ -121,14 +121,22 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             }
             imageFileNames.append(title)
             
-            
             let image = images[index]
             let imagePath = imagesDirectoryPath.appending("/\(title)")
             let data = UIImageJPEGRepresentation(image, 1.0)
-
+        
             let success = FileManager.default.createFile(atPath: imagePath, contents: data, attributes: nil)
             if success == false {
-                os_log("Failed to save images...", log: OSLog.default, type: .error)
+                os_log("Failed to save image...", log: OSLog.default, type: .error)
+            }
+        
+            let thumbnail = resizeToThumbnail(image: image)
+            let thumbnailPath = imagesDirectoryPath.appending("/\(title.components(separatedBy: ".")[0])thumbnail.jpg")
+            let thumbnaildata = UIImageJPEGRepresentation(thumbnail, 1.0)
+            
+            let secondSuccess = FileManager.default.createFile(atPath: thumbnailPath, contents: thumbnaildata, attributes: nil)
+            if secondSuccess == false {
+                os_log("Failed to save thumbnail...", log: OSLog.default, type: .error)
             }
         }
         NSKeyedArchiver.archiveRootObject(imageFileNames, toFile: imagesDirectoryPath.appending("/pictures"))
@@ -136,11 +144,30 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         
     }
     
+    func resizeToThumbnail(image: UIImage) -> UIImage{
+        //Make the image size the exact size of the cell. Do it for speed. "Gotta go fast"
+        let itemsPerRow: CGFloat = 2
+        var widthPerItem = floor(self.view.frame.width / itemsPerRow)
+        if widthPerItem == self.view.frame.width / itemsPerRow {
+            widthPerItem = widthPerItem - 0.5
+        }
+        let size = CGSize(width: widthPerItem, height: widthPerItem)
+        UIGraphicsBeginImageContextWithOptions(size,false,1.0)
+        image.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+        if let resizedImage = UIGraphicsGetImageFromCurrentImageContext() {
+            UIGraphicsEndImageContext()
+            return resizedImage
+        }
+        UIGraphicsEndImageContext()
+        return image
+    }
+    
     func loadImages(){
         imageFileNames = (NSKeyedUnarchiver.unarchiveObject(withFile: imagesDirectoryPath.appending("/pictures")) as? [String]) ?? []
         
         for imagePath in imageFileNames{
-            let data = FileManager.default.contents(atPath: imagesDirectoryPath.appending("/\(imagePath)"))
+            let thumbnailPath = imagePath.components(separatedBy: ".")[0] + "thumbnail.jpg"
+            let data = FileManager.default.contents(atPath: imagesDirectoryPath.appending("/\(thumbnailPath)"))
             let image = UIImage(data: data!)
             images.append(image!)
         }
