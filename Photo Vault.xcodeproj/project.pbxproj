@@ -21,6 +21,7 @@
 		C080F00E1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F00D1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift */; };
 		C080F0101E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F00F1E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift */; };
 		C080F0131E64BF6F0072C55F /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F0121E64BF6F0072C55F /* Array+Extension.swift */; };
+		C080F0151E65D8CD0072C55F /* test.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C080F0141E65D8CD0072C55F /* test.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		C080F00D1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoSelectorCollectionViewController.swift; sourceTree = "<group>"; };
 		C080F00F1E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
 		C080F0121E64BF6F0072C55F /* Array+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array+Extension.swift"; path = "../Array+Extension.swift"; sourceTree = "<group>"; };
+		C080F0141E65D8CD0072C55F /* test.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				C080EFDA1E5EA5590072C55F /* AppDelegate.swift */,
+				C080F0141E65D8CD0072C55F /* test.jpg */,
 				C080F0061E63999E0072C55F /* Photo Selector */,
 				C080EFFC1E5F8DFF0072C55F /* TableViewControllers */,
 				C080EFFD1E5F8E0F0072C55F /* TableViewCells */,
@@ -238,6 +241,7 @@
 			files = (
 				C080EFE71E5EA5590072C55F /* LaunchScreen.storyboard in Resources */,
 				C080EFE41E5EA5590072C55F /* Assets.xcassets in Resources */,
+				C080F0151E65D8CD0072C55F /* test.jpg in Resources */,
 				C080EFE21E5EA5590072C55F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

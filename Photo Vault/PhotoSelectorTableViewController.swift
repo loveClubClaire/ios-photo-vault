@@ -173,7 +173,7 @@ class PhotoSelectorTableViewController: UITableViewController {
     func getAlbumPhotos(anAlbum: PHAssetCollection) -> [UIImage]{
         var albumImages = [UIImage]()
         let photoAssets = PHAsset.fetchAssets(in: anAlbum, options: nil) as! PHFetchResult<AnyObject>
-        let imageManager = PHCachingImageManager()
+        let imageManager = PHImageManager()
         
         photoAssets.enumerateObjects({(object, count, stop) in
             if let asset = object as? PHAsset{

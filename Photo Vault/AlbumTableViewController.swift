@@ -95,12 +95,28 @@ class AlbumTableViewController: UITableViewController {
     
     // MARK: - Navigation
     
-    /*
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-
+        super.prepare(for: segue, sender: sender)
+        self.navigationController?.setToolbarHidden(true, animated: false)
+        switch (segue.identifier ?? "") {
+        case "showPhotos":
+            guard let viewController = segue.destination as? PhotosCollectionViewController else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            guard let selectedTimerCell = sender as? AlbumTableViewCell else {
+                fatalError("Unexpected sender: \(sender)")
+            }
+            guard let indexPath = tableView.indexPath(for: selectedTimerCell) else {
+                fatalError("The selected cell is not being displayed by the table")
+            }
+            viewController.albumName = albums[indexPath.row]
+        default:
+            fatalError("Unexpected Segue Identifier; \(segue.identifier)")
+        }
     }
-    */
+    
     
     
     // MARK: - Actions

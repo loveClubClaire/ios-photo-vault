@@ -7,24 +7,39 @@
 //
 
 import UIKit
+import os.log
 
-
-private let reuseIdentifier = "Cell"
+private let reuseIdentifier = "photoCell"
 
 class PhotosCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
+    var images = [UIImage]()
+    var archivePath: String?
+    
     var selectedImages = [Int]()
+    var albumName: String?
+    
+    var imagesDirectoryPath: String!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Register cell classes
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
         // Do any additional setup after loading the view.
+        //Create a folder for storing this albums photos if one does not already exist.
+        let documentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.path
+        // Create a new path for the new images folder
+        imagesDirectoryPath = documentsDirectory.appending("/Photos/\(albumName!)")
+        var objcBool:ObjCBool = true
+        let isExist = FileManager.default.fileExists(atPath: imagesDirectoryPath, isDirectory: &objcBool)
+        // If the folder with the given path doesn't exist already, create it
+        if isExist == false{
+            do{
+                try FileManager.default.createDirectory(atPath: imagesDirectoryPath, withIntermediateDirectories: true, attributes: nil)
+            }catch{
+                print("Something went wrong while creating a new folder")
+            }
+        }
+        loadImages()
     }
 
     override func didReceiveMemoryWarning() {
@@ -32,43 +47,21 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         // Dispose of any resources that can be recreated.
     }
 
-    
-    // MARK: - Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        switch (segue.identifier ?? "") {
-        case "addPhotos":
-        guard let viewController = segue.destination.childViewControllers.first as? PhotoSelectorTableViewController else {
-            fatalError("Unexpected destination: \(segue.destination)")
-        }
-        viewController.photosCollectionViewController = self
-        default:
-            fatalError("Unexpected Segue Identifier; \(segue.identifier)")
-        }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        print("Hello everyone!")
-        print(selectedImages)
-    }
-
     // MARK: - UICollectionViewDataSource
-
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
 
-
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return 20
+        return images.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-    
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as? PhotoCollectionViewCell else{
+            fatalError("Unexpected cell type")
+        }
         // Configure the cell
-        cell.backgroundColor = UIColor.black
+        cell.imageView.image = images[indexPath.row]
         return cell
     }
 
@@ -97,6 +90,62 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         return (view.frame.width - (widthPerItem * itemsPerRow)) / (itemsPerRow - 1)
     }
     
+    // MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        switch (segue.identifier ?? "") {
+        case "addPhotos":
+            guard let viewController = segue.destination.childViewControllers.first as? PhotoSelectorTableViewController else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            viewController.photosCollectionViewController = self
+        default:
+            fatalError("Unexpected Segue Identifier; \(segue.identifier)")
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        print("Hello everyone!")
+        print(selectedImages)
+    }
+    // MARK: - Save and Load
+    
+    var imageFileNames = [String]()
+    
+    func saveImages(){
+        for index in imageFileNames.count...images.count-1{
+            //If file name exists for some reason, make a new one don't overwrite the file
+            var title = String(arc4random()) + ".jpg"
+            while imageFileNames.contains(title) {
+                title = String(arc4random()) + ".jpg"
+            }
+            imageFileNames.append(title)
+            
+            
+            let image = images[index]
+            let imagePath = imagesDirectoryPath.appending("/\(title)")
+            let data = UIImageJPEGRepresentation(image, 1.0)
+
+            let success = FileManager.default.createFile(atPath: imagePath, contents: data, attributes: nil)
+            if success == false {
+                os_log("Failed to save images...", log: OSLog.default, type: .error)
+            }
+        }
+        NSKeyedArchiver.archiveRootObject(imageFileNames, toFile: imagesDirectoryPath.appending("/pictures"))
+        
+        
+    }
+    
+    func loadImages(){
+        imageFileNames = (NSKeyedUnarchiver.unarchiveObject(withFile: imagesDirectoryPath.appending("/pictures")) as? [String]) ?? []
+        
+        for imagePath in imageFileNames{
+            let data = FileManager.default.contents(atPath: imagesDirectoryPath.appending("/\(imagePath)"))
+            let image = UIImage(data: data!)
+            images.append(image!)
+        }
+    }
+
     
     // MARK: - UICollectionViewDelegate
 
@@ -129,3 +178,28 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     }
     */
 }
+
+
+//Archiving Paths
+//    let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
+//
+//    private func saveImages() {
+//        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(images.map{UIImagePNGRepresentation($0)}, toFile: archivePath!)
+//        if isSuccessfulSave {
+//            os_log("Images successfully saved.", log: OSLog.default, type: .debug)
+//        } else {
+//            os_log("Failed to save images...", log: OSLog.default, type: .error)
+//        }
+//    }
+//
+//    private func loadImages() -> [UIImage]?  {
+//        if let dataArray = NSKeyedUnarchiver.unarchiveObject(withFile: archivePath!) as? [NSData] {
+//            // Transform the data items to UIImage items
+//            let testArray = dataArray.map { UIImage(data: $0 as Data)! }
+//            print("\(testArray.count) images loaded.")
+//            return testArray
+//        } else {
+//            print("Failed to load images.")
+//            return nil
+//        }
+//    }

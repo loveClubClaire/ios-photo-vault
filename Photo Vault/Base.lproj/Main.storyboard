@@ -41,7 +41,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="albumNameLabel" destination="IK2-Mj-pOi" id="1Gs-Ce-uGg"/>
-                                    <segue destination="jRU-I1-uZJ" kind="show" id="8ek-Kj-tDF"/>
+                                    <segue destination="jRU-I1-uZJ" kind="show" identifier="showPhotos" id="8ek-Kj-tDF"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -77,13 +77,27 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="OQu-io-jii" customClass="PhotoCollectionViewCell" customModule="Photo_Vault" customModuleProvider="target">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="photoCell" id="OQu-io-jii" customClass="PhotoCollectionViewCell" customModule="Photo_Vault" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="103" height="103"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="103" height="103"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CO7-mY-l3R">
+                                            <rect key="frame" x="0.0" y="0.0" width="103" height="103"/>
+                                        </imageView>
+                                    </subviews>
                                 </view>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="CO7-mY-l3R" secondAttribute="bottom" id="4QA-KO-Pym"/>
+                                    <constraint firstItem="CO7-mY-l3R" firstAttribute="top" secondItem="OQu-io-jii" secondAttribute="top" id="9rr-cI-KT7"/>
+                                    <constraint firstItem="CO7-mY-l3R" firstAttribute="leading" secondItem="OQu-io-jii" secondAttribute="leading" id="c3Z-7H-CWo"/>
+                                    <constraint firstAttribute="trailing" secondItem="CO7-mY-l3R" secondAttribute="trailing" id="w30-ZK-jkZ"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="imageView" destination="CO7-mY-l3R" id="uX5-iT-8Wd"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <connections>
@@ -94,7 +108,11 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="d3B-7v-xw0">
                         <rightBarButtonItems>
-                            <barButtonItem title="Select" id="Tjd-qe-dxb"/>
+                            <barButtonItem title="Select" id="Tjd-qe-dxb">
+                                <connections>
+                                    <action selector="temp:" destination="jRU-I1-uZJ" id="XJf-dI-95C"/>
+                                </connections>
+                            </barButtonItem>
                             <barButtonItem systemItem="add" id="QRB-QA-HUg">
                                 <connections>
                                     <action selector="addButton:" destination="jRU-I1-uZJ" id="SON-ug-qDu"/>
@@ -107,7 +125,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I69-U2-Zc2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4300" y="50"/>
+            <point key="canvasLocation" x="4300" y="49.925037481259373"/>
         </scene>
         <!--Photo Selector Table View Controller-->
         <scene sceneID="R6g-CB-CAW">
