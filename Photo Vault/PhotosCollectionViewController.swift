@@ -8,12 +8,21 @@
 
 import UIKit
 import os.log
+import ImageViewer
 
 private let reuseIdentifier = "photoCell"
 
-class PhotosCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension UIImageView: DisplaceableView {}
 
-    var images = [UIImage]()
+struct Image {
+    let thumbnail: UIImage
+    let galleryItem: GalleryItem?
+}
+
+class PhotosCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    var images = [Image]()
+    var importedImages = [UIImage]()
     var archivePath: String?
     
     var selectedImages = [Int]()
@@ -61,7 +70,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             fatalError("Unexpected cell type")
         }
         // Configure the cell
-        cell.imageView.image = images[indexPath.row]
+        cell.imageView.image = images[indexPath.row].thumbnail
         return cell
     }
 
@@ -105,43 +114,73 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        //TODO
         print("Hello everyone!")
         print(selectedImages)
     }
-    // MARK: - Save and Load
     
+    // MARK: - Save and Load
     var imageFileNames = [String]()
     
     func saveImages(){
-        for index in imageFileNames.count...images.count-1{
+        //For all images being imported into the album...
+        for anImage in importedImages{
+            //Create a file name for the image
             //If file name exists for some reason, make a new one don't overwrite the file
             var title = String(arc4random()) + ".jpg"
             while imageFileNames.contains(title) {
                 title = String(arc4random()) + ".jpg"
             }
             imageFileNames.append(title)
-            
-            let image = images[index]
+            //Convert the image to data (currently only supporting JPEG, may increase support as time goes on)
+            let image = anImage
             let imagePath = imagesDirectoryPath.appending("/\(title)")
             let data = UIImageJPEGRepresentation(image, 1.0)
-        
+            //Save the image to disk
             let success = FileManager.default.createFile(atPath: imagePath, contents: data, attributes: nil)
             if success == false {
                 os_log("Failed to save image...", log: OSLog.default, type: .error)
             }
-        
+            //Resize the image to thumbnail size and quality (do this so we have small images to load into the collection view cells. Small images == less data to load from disk == smaller loading times)
             let thumbnail = resizeToThumbnail(image: image)
             let thumbnailPath = imagesDirectoryPath.appending("/\(title.components(separatedBy: ".")[0])thumbnail.jpg")
             let thumbnaildata = UIImageJPEGRepresentation(thumbnail, 1.0)
-            
+            //Save the thumbnail to disk
             let secondSuccess = FileManager.default.createFile(atPath: thumbnailPath, contents: thumbnaildata, attributes: nil)
             if secondSuccess == false {
                 os_log("Failed to save thumbnail...", log: OSLog.default, type: .error)
             }
         }
+        //Remove the contents of the imported images array and store the contents of the imageFileNames array to disk. If a version already exists, it is overridden.
+        importedImages.removeAll()
         NSKeyedArchiver.archiveRootObject(imageFileNames, toFile: imagesDirectoryPath.appending("/pictures"))
-        
-        
+    }
+    
+    func loadImages(){
+        //Load the array of image file names
+        imageFileNames = (NSKeyedUnarchiver.unarchiveObject(withFile: imagesDirectoryPath.appending("/pictures")) as? [String]) ?? []
+        //For every imageFileName..
+        for imagePath in imageFileNames{
+            //Generate a path to the thumbnail image and load it from disk into memory
+            let thumbnailPath = imagePath.components(separatedBy: ".")[0] + "thumbnail.jpg"
+            let data = FileManager.default.contents(atPath: imagesDirectoryPath.appending("/\(thumbnailPath)"))
+            let image = UIImage(data: data!)
+            //Store a custom fetch image function in a variable
+            let myFetchImageBlock: FetchImageBlock = {
+                //When called, this function loads the selected full quality image into memory
+                let fetchedData = FileManager.default.contents(atPath: self.imagesDirectoryPath.appending("/\(imagePath)"))
+                let fetchedImage = UIImage(data: fetchedData!)
+                $0(fetchedImage)
+            }
+            
+            let itemViewControllerBlock: ItemViewControllerBlock = { index, itemCount, fetchImageBlock, configuration, isInitialController in
+                return AnimatedViewController(index: index, itemCount: itemCount, fetchImageBlock: myFetchImageBlock, configuration: configuration, isInitialController: isInitialController)
+           }
+            //Create a new gallery item containing the two custom functions defined above.
+            let galleryItem = GalleryItem.custom(fetchImageBlock: myFetchImageBlock, itemViewControllerBlock: itemViewControllerBlock)
+            //Add the thumbnail images and it's corresponding galleryItem to our imageArray as a new Image object
+            images.append(Image.init(thumbnail: image!, galleryItem: galleryItem))
+        }
     }
     
     func resizeToThumbnail(image: UIImage) -> UIImage{
@@ -162,20 +201,60 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         return image
     }
     
-    func loadImages(){
-        imageFileNames = (NSKeyedUnarchiver.unarchiveObject(withFile: imagesDirectoryPath.appending("/pictures")) as? [String]) ?? []
-        
-        for imagePath in imageFileNames{
-            let thumbnailPath = imagePath.components(separatedBy: ".")[0] + "thumbnail.jpg"
-            let data = FileManager.default.contents(atPath: imagesDirectoryPath.appending("/\(thumbnailPath)"))
-            let image = UIImage(data: data!)
-            images.append(image!)
-        }
-    }
-
-    
     // MARK: - UICollectionViewDelegate
-
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    let galleryViewController = GalleryViewController(startIndex: indexPath.row, itemsDataSource: self, itemsDelegate: nil, displacedViewsDataSource: self, configuration: galleryConfiguration())
+    self.presentImageGallery(galleryViewController)
+    }
+    
+    func galleryConfiguration() -> GalleryConfiguration {
+        
+        return [
+            
+            GalleryConfigurationItem.closeButtonMode(.builtIn),
+            
+            GalleryConfigurationItem.pagingMode(.standard),
+            GalleryConfigurationItem.presentationStyle(.displacement),
+            GalleryConfigurationItem.hideDecorationViewsOnLaunch(false),
+            
+            GalleryConfigurationItem.swipeToDismissMode(.vertical),
+            GalleryConfigurationItem.toggleDecorationViewsBySingleTap(false),
+            
+            GalleryConfigurationItem.overlayColor(UIColor(white: 0.035, alpha: 1)),
+            GalleryConfigurationItem.overlayColorOpacity(1),
+            GalleryConfigurationItem.overlayBlurOpacity(1),
+            GalleryConfigurationItem.overlayBlurStyle(UIBlurEffectStyle.light),
+            
+            GalleryConfigurationItem.maximumZoomScale(8),
+            GalleryConfigurationItem.swipeToDismissThresholdVelocity(500),
+            
+            GalleryConfigurationItem.doubleTapToZoomDuration(0.15),
+            
+            GalleryConfigurationItem.blurPresentDuration(0.5),
+            GalleryConfigurationItem.blurPresentDelay(0),
+            GalleryConfigurationItem.colorPresentDuration(0.25),
+            GalleryConfigurationItem.colorPresentDelay(0),
+            
+            GalleryConfigurationItem.blurDismissDuration(0.1),
+            GalleryConfigurationItem.blurDismissDelay(0.4),
+            GalleryConfigurationItem.colorDismissDuration(0.45),
+            GalleryConfigurationItem.colorDismissDelay(0),
+            
+            GalleryConfigurationItem.itemFadeDuration(0.3),
+            GalleryConfigurationItem.decorationViewsFadeDuration(0.15),
+            GalleryConfigurationItem.rotationDuration(0.15),
+            
+            GalleryConfigurationItem.displacementDuration(0.55),
+            GalleryConfigurationItem.reverseDisplacementDuration(0.25),
+            GalleryConfigurationItem.displacementTransitionStyle(.springBounce(0.7)),
+            GalleryConfigurationItem.displacementTimingCurve(.linear),
+            
+            GalleryConfigurationItem.statusBarHidden(true),
+            GalleryConfigurationItem.displacementKeepOriginalInPlace(false),
+            GalleryConfigurationItem.displacementInsetMargin(50)
+        ]
+    }
+    
     /*
     // Uncomment this method to specify if the specified item should be highlighted during tracking
     override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
@@ -204,29 +283,40 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     
     }
     */
+    
+    @IBAction func test(_ sender: Any) {
+        importedImages.append(#imageLiteral(resourceName: "test2.JPG"))
+        saveImages()
+    }
+}
+// MARK: - ImageView Extensions
+//Done as extensions because that's how this works I guess
+extension PhotosCollectionViewController: GalleryDisplacedViewsDataSource {
+    func provideDisplacementItem(atIndex index: Int) -> DisplaceableView? {
+        if index < images.count {
+            guard let cell = self.collectionView?.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: IndexPath.init(row: index, section: 0)) as? PhotoCollectionViewCell else{
+                fatalError("Unexpected cell type")
+            }
+            return cell.imageView
+        }
+        else{
+            return nil
+        }
+    }
+}
+
+extension PhotosCollectionViewController: GalleryItemsDataSource{
+    func itemCount() -> Int {
+        return images.count
+    }
+    
+    func provideGalleryItem(_ index: Int) -> GalleryItem {
+        return images[index].galleryItem!
+    }
 }
 
 
-//Archiving Paths
-//    let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
-//
-//    private func saveImages() {
-//        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(images.map{UIImagePNGRepresentation($0)}, toFile: archivePath!)
-//        if isSuccessfulSave {
-//            os_log("Images successfully saved.", log: OSLog.default, type: .debug)
-//        } else {
-//            os_log("Failed to save images...", log: OSLog.default, type: .error)
-//        }
-//    }
-//
-//    private func loadImages() -> [UIImage]?  {
-//        if let dataArray = NSKeyedUnarchiver.unarchiveObject(withFile: archivePath!) as? [NSData] {
-//            // Transform the data items to UIImage items
-//            let testArray = dataArray.map { UIImage(data: $0 as Data)! }
-//            print("\(testArray.count) images loaded.")
-//            return testArray
-//        } else {
-//            print("Failed to load images.")
-//            return nil
-//        }
-//    }
+// Some external custom UIImageView we want to show in the gallery
+class FLSomeAnimatedImage: UIImageView {}
+// Extend ImageBaseController so we get all the functionality for free
+class AnimatedViewController: ItemBaseController<FLSomeAnimatedImage> {}
