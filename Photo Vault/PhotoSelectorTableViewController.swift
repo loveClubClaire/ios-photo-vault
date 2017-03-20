@@ -61,7 +61,6 @@ class PhotoSelectorTableViewController: UITableViewController {
             fatalError("The dequeued cell is not an instance of PhotoSelectorTableViewCell.")
         }
         
-        // Fetches the appropriate meal for the data source layout.
         let album = photoAlbums[indexPath.row]
         cell.albumName.text = album.name + " (" + String(album.photoCount) + ")"
         cell.thumbnail.image = album.thumbnail
@@ -162,7 +161,7 @@ class PhotoSelectorTableViewController: UITableViewController {
         options.isSynchronous = true
 
         //TODO: Make this more dynamic
-        let imageSize = CGSize(width: 200, height: 200)
+        let imageSize = CGSize(width: 100, height: 100)
         
         imageManager.requestImage(for: photoAssets.lastObject as! PHAsset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {(image, info) -> Void in
             thumbnail = image!
