@@ -9,6 +9,7 @@
 import UIKit
 import os.log
 import ImageViewer
+import RPCircularProgress
 
 private let reuseIdentifier = "photoCell"
 
@@ -285,7 +286,53 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     */
     
     @IBAction func test(_ sender: Any) {
-        importedImages.append(#imageLiteral(resourceName: "test2.JPG"))
+        //importedImages.append(#imageLiteral(resourceName: "test2.JPG"))
+
+        self.view.isUserInteractionEnabled = false
+        self.navigationController?.view.isUserInteractionEnabled = false
+        self.tabBarController?.view.isUserInteractionEnabled = false
+
+        //Gray out the view
+        let container: UIView = UIView()
+        container.frame = self.view.frame
+        container.center = self.view.center
+        container.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        container.tag = 100
+        //Create the progressbar box
+        let loadingView: UIView = UIView()
+        loadingView.frame = CGRect.init(x: 0, y: 0, width: 80, height: 80)
+        loadingView.center = self.view.center
+        loadingView.backgroundColor = UIColor.gray.withAlphaComponent(0.7)
+        loadingView.clipsToBounds = true
+        loadingView.layer.cornerRadius = 10
+        //Create the progress bar
+        let progress = RPCircularProgress()
+        progress.roundedCorners = false
+        progress.thicknessRatio = 1
+        
+        progress.center = CGPoint.init(x: 40, y: 40)
+        //Add the views to each other and to the main view
+        loadingView.addSubview(progress)
+        container.addSubview(loadingView)
+        self.view.addSubview(container)
+        
+        
+        for index in 0...100{
+            progress.updateProgress(CGFloat(Double(index).multiplied(by: 0.01)), animated: true, initialDelay: 0)
+        }
+        
+        let when = DispatchTime.now() + 3 // change 2 to desired number of seconds
+        DispatchQueue.main.asyncAfter(deadline: when) {
+            if let viewWithTag = self.view.viewWithTag(100) {
+                viewWithTag.removeFromSuperview()
+            }
+            self.view.isUserInteractionEnabled = true
+            self.navigationController?.view.isUserInteractionEnabled = true
+            self.tabBarController?.view.isUserInteractionEnabled = true
+        }
+        
+
+
         saveImages()
     }
 }
