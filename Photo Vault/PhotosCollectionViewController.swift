@@ -34,7 +34,6 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     var albumName: String?
     var imagesDirectoryPath: String!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -311,23 +310,41 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     }
     
     // MARK: - UICollectionViewDelegate
+    var showStatusBar = true
+    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let galleryViewController = GalleryViewController(startIndex: indexPath.row, itemsDataSource: self, itemsDelegate: nil, displacedViewsDataSource: self, configuration: galleryConfiguration())
+        
+    galleryViewController.swipedToDismissCompletion = { self.showStatusBar = true}
+    showStatusBar = false
+    
+
     self.presentImageGallery(galleryViewController)
     }
+    
+
+    override var prefersStatusBarHidden: Bool{
+        if showStatusBar {
+            return false
+        }
+        return true
+    }
+    
+
     
     func galleryConfiguration() -> GalleryConfiguration {
         
         return [
-            
-            GalleryConfigurationItem.closeButtonMode(.builtIn),
+            GalleryConfigurationItem.thumbnailsButtonMode(.none),
+            GalleryConfigurationItem.deleteButtonMode(.none),
+            GalleryConfigurationItem.closeButtonMode(.none),
             
             GalleryConfigurationItem.pagingMode(.standard),
             GalleryConfigurationItem.presentationStyle(.displacement),
-            GalleryConfigurationItem.hideDecorationViewsOnLaunch(false),
+            GalleryConfigurationItem.hideDecorationViewsOnLaunch(true),
             
             GalleryConfigurationItem.swipeToDismissMode(.vertical),
-            GalleryConfigurationItem.toggleDecorationViewsBySingleTap(false),
+            GalleryConfigurationItem.toggleDecorationViewsBySingleTap(true),
             
             GalleryConfigurationItem.overlayColor(UIColor(white: 0.035, alpha: 1)),
             GalleryConfigurationItem.overlayColorOpacity(1),
@@ -358,7 +375,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             GalleryConfigurationItem.displacementTransitionStyle(.springBounce(0.7)),
             GalleryConfigurationItem.displacementTimingCurve(.linear),
             
-            GalleryConfigurationItem.statusBarHidden(true),
+            GalleryConfigurationItem.statusBarHidden(false),
             GalleryConfigurationItem.displacementKeepOriginalInPlace(false),
             GalleryConfigurationItem.displacementInsetMargin(50)
         ]
