@@ -11,6 +11,7 @@ import os.log
 import ImageViewer
 import RPCircularProgress
 import Photos
+import AVFoundation
 
 private let reuseIdentifier = "photoCell"
 
@@ -277,15 +278,29 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         }
     }
     
+    
+
+    
     func resizeToThumbnail(image: UIImage) -> UIImage{
         //Make the image size the exact size of the cell. Do it for speed. "Gotta go fast"
-        let itemsPerRow: CGFloat = 2
+        let itemsPerRow: CGFloat = 1
         var widthPerItem = floor(self.view.frame.width / itemsPerRow)
         if widthPerItem == self.view.frame.width / itemsPerRow {
             widthPerItem = widthPerItem - 0.5
         }
-        let size = CGSize(width: widthPerItem, height: widthPerItem)
-        UIGraphicsBeginImageContextWithOptions(size,false,1.0)
+        
+        var factor = CGFloat(0.0)
+        if image.size.width > image.size.height{
+            factor = image.size.width.divided(by: widthPerItem)
+        }
+        if image.size.width <= image.size.height{
+            factor = image.size.height.divided(by: widthPerItem)
+        }
+        
+        let size = CGSize(width: image.size.width.divided(by: factor), height: image.size.height.divided(by: factor))
+
+        
+        UIGraphicsBeginImageContextWithOptions(size,false, 1.0)
         image.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
         if let resizedImage = UIGraphicsGetImageFromCurrentImageContext() {
             UIGraphicsEndImageContext()
@@ -377,13 +392,6 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     
     }
     */
-    
-    @IBAction func test(_ sender: Any) {
-        //importedImages.append(#imageLiteral(resourceName: "test2.JPG"))
-
-        
-
-    }
 }
 // MARK: - ImageView Extensions
 //Done as extensions because that's how this works I guess

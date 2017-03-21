@@ -109,11 +109,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="d3B-7v-xw0">
                         <rightBarButtonItems>
-                            <barButtonItem title="Select" id="Tjd-qe-dxb">
-                                <connections>
-                                    <action selector="test:" destination="jRU-I1-uZJ" id="Wgr-sX-kVt"/>
-                                </connections>
-                            </barButtonItem>
+                            <barButtonItem title="Select" id="Tjd-qe-dxb"/>
                             <barButtonItem systemItem="add" id="QRB-QA-HUg">
                                 <connections>
                                     <action selector="addButton:" destination="jRU-I1-uZJ" id="SON-ug-qDu"/>
