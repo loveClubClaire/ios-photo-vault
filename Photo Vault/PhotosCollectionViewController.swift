@@ -202,10 +202,28 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
                         if secondSuccess == false {
                             os_log("Failed to save thumbnail...", log: OSLog.default, type: .error)
                         }
+                        
+                        //Store a custom fetch image function in a variable
+                        let myFetchImageBlock: FetchImageBlock = {
+                            //When called, this function loads the selected full quality image into memory
+                            let fetchedData = FileManager.default.contents(atPath: imagePath)
+                            let fetchedImage = UIImage(data: fetchedData!)
+                            $0(fetchedImage)
+                        }
+                        
+                        let itemViewControllerBlock: ItemViewControllerBlock = { index, itemCount, fetchImageBlock, configuration, isInitialController in
+                            return AnimatedViewController(index: index, itemCount: itemCount, fetchImageBlock: myFetchImageBlock, configuration: configuration, isInitialController: isInitialController)
+                        }
+                        //Create a new gallery item containing the two custom functions defined above.
+                        let galleryItem = GalleryItem.custom(fetchImageBlock: myFetchImageBlock, itemViewControllerBlock: itemViewControllerBlock)
+                        //Add the thumbnail images and it's corresponding galleryItem to our imageArray as a new Image object
+                        self.images.append(Image.init(thumbnail: thumbnail, galleryItem: galleryItem))
+                        
                         //Grab the main thread and update the progress bar. By launching saveNewImages as an async task, the main thread is not blocked. So when we go to grab it and update the UI, the UI will actually update.
                         DispatchQueue.main.sync {
                             progress = progress + incrementValue
                             self.progress.updateProgress(progress, animated: true, initialDelay: 0)
+                            self.collectionView?.reloadData()
                         }
                     })
                 }
@@ -214,22 +232,24 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         //When all the photos are loaded, grab the main thread and dismiss the progress bar views
         DispatchQueue.main.sync {
             if let viewWithTag = self.view.viewWithTag(100) {
-                //Delay removing the progress bar views for a 1/4 of a second. So the user see's the complete progress bar long enough to regester that the task has been completed. 
+                //Delay removing the progress bar views for a 1/4 of a second. So the user see's the complete progress bar long enough to regester that the task has been completed.
                 let when = DispatchTime.now() + 0.25
                 DispatchQueue.main.asyncAfter(deadline: when) {
                     viewWithTag.removeFromSuperview()
+                    //Set the progress bar to zero so it's not already filled the next time it's called 
+                    self.progress.updateProgress(0.0)
                 }
-                
             }
+                
             //Reenable user interaction
             self.view.isUserInteractionEnabled = true
             self.navigationController?.view.isUserInteractionEnabled = true
             self.tabBarController?.view.isUserInteractionEnabled = true
-        }
+    }
         //Save the image file names
         NSKeyedArchiver.archiveRootObject(imageFileNames, toFile: imagesDirectoryPath.appending("/pictures"))
     }
-    
+
     func loadImages(){
         //Load the array of image file names
         imageFileNames = (NSKeyedUnarchiver.unarchiveObject(withFile: imagesDirectoryPath.appending("/pictures")) as? [String]) ?? []
