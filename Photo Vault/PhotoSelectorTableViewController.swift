@@ -121,6 +121,7 @@ class PhotoSelectorTableViewController: UITableViewController {
                 fatalError("The selected cell is not being displayed by the table")
             }
             viewController.images = getAlbumPhotos(anAlbum: photoAlbums[indexPath.row].identifier)
+            viewController.imagesAlbum = photoAlbums[indexPath.row].identifier
             viewController.photosCollectionViewController = self.photosCollectionViewController
         default:
             fatalError("Unexpected Segue Identifier; \(segue.identifier)")

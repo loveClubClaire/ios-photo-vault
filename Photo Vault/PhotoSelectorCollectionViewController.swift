@@ -8,6 +8,7 @@
 
 import UIKit
 import Foundation
+import Photos
 
 private let reuseIdentifier = "selectorCell"
 
@@ -19,6 +20,7 @@ class PhotoSelectorCollectionViewController: UICollectionViewController, UIColle
      This value is either passed by `PhotoSelectorTableViewController` in `prepare(for:sender:)`
      */
     var images = [UIImage]()
+    var imagesAlbum = PHAssetCollection()
     var photosCollectionViewController: PhotosCollectionViewController?
     
     override func viewDidLoad() {
@@ -51,6 +53,7 @@ class PhotoSelectorCollectionViewController: UICollectionViewController, UIColle
     
     func save(){
         photosCollectionViewController?.selectedImages = selectedImages
+        photosCollectionViewController?.selectedImagesAlbum = imagesAlbum
         dismiss(animated: true, completion: nil)
     }
     

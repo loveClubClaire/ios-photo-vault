@@ -10,6 +10,7 @@ import UIKit
 import os.log
 import ImageViewer
 import RPCircularProgress
+import Photos
 
 private let reuseIdentifier = "photoCell"
 
@@ -23,12 +24,13 @@ struct Image {
 class PhotosCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var images = [Image]()
-    var importedImages = [UIImage]()
     var archivePath: String?
     
     var selectedImages = [Int]()
-    var albumName: String?
+    var selectedImagesAlbum = PHAssetCollection()
+    let progress = RPCircularProgress()
     
+    var albumName: String?
     var imagesDirectoryPath: String!
     
     
@@ -115,45 +117,116 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        //TODO
-        print("Hello everyone!")
-        print(selectedImages)
+        //If we are coming from the photo selector, we load the progress bar before the view appears so that its visible the moment the view is visable
+        if selectedImages.isEmpty == false{
+            //Disable user interaction with the view, navigation bar, or tab bar
+            self.view.isUserInteractionEnabled = false
+            self.navigationController?.view.isUserInteractionEnabled = false
+            self.tabBarController?.view.isUserInteractionEnabled = false
+            //Create a semi transucent gray view to place on the view to indicate that interaction is disabled
+            let container: UIView = UIView()
+            container.frame = self.view.frame
+            container.center = self.view.center
+            container.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+            container.tag = 100
+            //Create the progressbar box view
+            let loadingView: UIView = UIView()
+            loadingView.frame = CGRect.init(x: 0, y: 0, width: 80, height: 80)
+            loadingView.center = self.view.center
+            loadingView.backgroundColor = UIColor.gray.withAlphaComponent(0.7)
+            loadingView.clipsToBounds = true
+            loadingView.layer.cornerRadius = 10
+            //Create the progress bar
+            progress.roundedCorners = false
+            progress.thicknessRatio = 1
+            progress.center = CGPoint.init(x: 40, y: 40)
+            //Add the views to each other and to the main view
+            loadingView.addSubview(progress)
+            container.addSubview(loadingView)
+            self.view.addSubview(container)
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        //When the view does appear (coming from the photo selector) we save the new images as an async task
+        if selectedImages.isEmpty == false{
+            DispatchQueue.global().async {
+                self.saveNewImages()
+            }
+        }
     }
     
     // MARK: - Save and Load
     var imageFileNames = [String]()
     
-    func saveImages(){
-        //For all images being imported into the album...
-        for anImage in importedImages{
-            //Create a file name for the image
-            //If file name exists for some reason, make a new one don't overwrite the file
-            var title = String(arc4random()) + ".jpg"
-            while imageFileNames.contains(title) {
-                title = String(arc4random()) + ".jpg"
+    func saveNewImages(){
+        //Calculate the amount the progress bar increments for each photo saved
+        let incrementValue = CGFloat.init(1.0 / Double(selectedImages.count))
+        var progress = CGFloat(0.0)
+        
+        let photoAssets = PHAsset.fetchAssets(in: selectedImagesAlbum, options: nil) as! PHFetchResult<AnyObject>
+        let imageManager = PHImageManager()
+        //Itterate though the album we're importing from, and only take action on images which were selected by the user
+        photoAssets.enumerateObjects({(object, count, stop) in
+            if self.selectedImages.contains(count){
+                if let asset = object as? PHAsset{
+                    //We're getting the high quality version of each image
+                    let options = PHImageRequestOptions()
+                    options.deliveryMode = .highQualityFormat
+                    options.isSynchronous = true
+                    //When we have an image
+                    imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFill, options: options, resultHandler: {
+                        (image, info) -> Void in
+                        //Create a file name for the image
+                        //If file name exists for some reason, make a new one don't overwrite the file
+                        var title = String(arc4random()) + ".jpg"
+                        while self.imageFileNames.contains(title) {
+                            title = String(arc4random()) + ".jpg"
+                        }
+                        self.imageFileNames.append(title)
+                        //Convert the image to data (currently only supporting JPEG, may increase support as time goes on)
+                        let image = image
+                        let imagePath = self.imagesDirectoryPath.appending("/\(title)")
+                        let data = UIImageJPEGRepresentation(image!, 1.0)
+                        //Save the image to disk
+                        let success = FileManager.default.createFile(atPath: imagePath, contents: data, attributes: nil)
+                        if success == false {
+                            os_log("Failed to save image...", log: OSLog.default, type: .error)
+                        }
+                        //Resize the image to thumbnail size and quality (do this so we have small images to load into the collection view cells. Small images == less data to load from disk == smaller loading times)
+                        let thumbnail = self.resizeToThumbnail(image: image!)
+                        let thumbnailPath = self.imagesDirectoryPath.appending("/\(title.components(separatedBy: ".")[0])thumbnail.jpg")
+                        let thumbnaildata = UIImageJPEGRepresentation(thumbnail, 1.0)
+                        //Save the thumbnail to disk
+                        let secondSuccess = FileManager.default.createFile(atPath: thumbnailPath, contents: thumbnaildata, attributes: nil)
+                        if secondSuccess == false {
+                            os_log("Failed to save thumbnail...", log: OSLog.default, type: .error)
+                        }
+                        //Grab the main thread and update the progress bar. By launching saveNewImages as an async task, the main thread is not blocked. So when we go to grab it and update the UI, the UI will actually update.
+                        DispatchQueue.main.sync {
+                            progress = progress + incrementValue
+                            self.progress.updateProgress(progress, animated: true, initialDelay: 0)
+                        }
+                    })
+                }
             }
-            imageFileNames.append(title)
-            //Convert the image to data (currently only supporting JPEG, may increase support as time goes on)
-            let image = anImage
-            let imagePath = imagesDirectoryPath.appending("/\(title)")
-            let data = UIImageJPEGRepresentation(image, 1.0)
-            //Save the image to disk
-            let success = FileManager.default.createFile(atPath: imagePath, contents: data, attributes: nil)
-            if success == false {
-                os_log("Failed to save image...", log: OSLog.default, type: .error)
+        })
+        //When all the photos are loaded, grab the main thread and dismiss the progress bar views
+        DispatchQueue.main.sync {
+            if let viewWithTag = self.view.viewWithTag(100) {
+                //Delay removing the progress bar views for a 1/4 of a second. So the user see's the complete progress bar long enough to regester that the task has been completed. 
+                let when = DispatchTime.now() + 0.25
+                DispatchQueue.main.asyncAfter(deadline: when) {
+                    viewWithTag.removeFromSuperview()
+                }
+                
             }
-            //Resize the image to thumbnail size and quality (do this so we have small images to load into the collection view cells. Small images == less data to load from disk == smaller loading times)
-            let thumbnail = resizeToThumbnail(image: image)
-            let thumbnailPath = imagesDirectoryPath.appending("/\(title.components(separatedBy: ".")[0])thumbnail.jpg")
-            let thumbnaildata = UIImageJPEGRepresentation(thumbnail, 1.0)
-            //Save the thumbnail to disk
-            let secondSuccess = FileManager.default.createFile(atPath: thumbnailPath, contents: thumbnaildata, attributes: nil)
-            if secondSuccess == false {
-                os_log("Failed to save thumbnail...", log: OSLog.default, type: .error)
-            }
+            //Reenable user interaction
+            self.view.isUserInteractionEnabled = true
+            self.navigationController?.view.isUserInteractionEnabled = true
+            self.tabBarController?.view.isUserInteractionEnabled = true
         }
-        //Remove the contents of the imported images array and store the contents of the imageFileNames array to disk. If a version already exists, it is overridden.
-        importedImages.removeAll()
+        //Save the image file names
         NSKeyedArchiver.archiveRootObject(imageFileNames, toFile: imagesDirectoryPath.appending("/pictures"))
     }
     
@@ -288,52 +361,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     @IBAction func test(_ sender: Any) {
         //importedImages.append(#imageLiteral(resourceName: "test2.JPG"))
 
-        self.view.isUserInteractionEnabled = false
-        self.navigationController?.view.isUserInteractionEnabled = false
-        self.tabBarController?.view.isUserInteractionEnabled = false
-
-        //Gray out the view
-        let container: UIView = UIView()
-        container.frame = self.view.frame
-        container.center = self.view.center
-        container.backgroundColor = UIColor.black.withAlphaComponent(0.1)
-        container.tag = 100
-        //Create the progressbar box
-        let loadingView: UIView = UIView()
-        loadingView.frame = CGRect.init(x: 0, y: 0, width: 80, height: 80)
-        loadingView.center = self.view.center
-        loadingView.backgroundColor = UIColor.gray.withAlphaComponent(0.7)
-        loadingView.clipsToBounds = true
-        loadingView.layer.cornerRadius = 10
-        //Create the progress bar
-        let progress = RPCircularProgress()
-        progress.roundedCorners = false
-        progress.thicknessRatio = 1
-        
-        progress.center = CGPoint.init(x: 40, y: 40)
-        //Add the views to each other and to the main view
-        loadingView.addSubview(progress)
-        container.addSubview(loadingView)
-        self.view.addSubview(container)
-        
-        
-        for index in 0...100{
-            progress.updateProgress(CGFloat(Double(index).multiplied(by: 0.01)), animated: true, initialDelay: 0)
-        }
-        
-        let when = DispatchTime.now() + 3 // change 2 to desired number of seconds
-        DispatchQueue.main.asyncAfter(deadline: when) {
-            if let viewWithTag = self.view.viewWithTag(100) {
-                viewWithTag.removeFromSuperview()
-            }
-            self.view.isUserInteractionEnabled = true
-            self.navigationController?.view.isUserInteractionEnabled = true
-            self.tabBarController?.view.isUserInteractionEnabled = true
-        }
         
 
-
-        saveImages()
     }
 }
 // MARK: - ImageView Extensions
