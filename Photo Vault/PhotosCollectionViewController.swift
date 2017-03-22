@@ -311,15 +311,45 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     
     // MARK: - UICollectionViewDelegate
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        //Define the colorspace and the color for the header and footer border
+        let space : CGColorSpace = CGColorSpaceCreateDeviceRGB()
+        let color : CGColor = CGColor(colorSpace: space, components: [0.0, 0.0, 0.0, 0.3])!
+        //Create the header and footer frames and views. The header and footer get their height from the navigation bar and the tab bar respectively. The header height is actually the navigation bar height plus the height of the status bar frame because if that's not accounted for, the view will just overlap the status bar.
         let headerFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: ((self.navigationController?.navigationBar.frame.height)! + UIApplication.shared.statusBarFrame.height))
         let footerFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: (self.tabBarController?.tabBar.frame.height)!)
         let headerView = UIView.init(frame: headerFrame)
         let footerView = UIView.init(frame: footerFrame)
-        
-       
+        //What we do next is set the header views color, create a white view, and a border layer. Layering these three objects on top of each other give us the same appearance as a standard iOS navigation bar or tab bar. We do the same thing for the footer. We use the values we use because that's apperently what Apple uses. See http://stackoverflow.com/a/30154915/3594256 for more detail
+        //Set the header view's color
         headerView.backgroundColor = UIColor.white
+        headerView.alpha = 0.85
+        headerView.isOpaque = false
+        //Create the headers white view
+        let whiteHeaderFrame = UIView.init(frame: headerFrame)
+        whiteHeaderFrame.backgroundColor = UIColor(white: 0.97, alpha: 0.5)
+        whiteHeaderFrame.isOpaque = false
+        //Create the headers border
+        let headerBorder = CALayer()
+        headerBorder.backgroundColor = color
+        headerBorder.frame = CGRect(x: 0, y: headerFrame.height - 0.25, width: headerFrame.width, height: 0.25)
+        //Add the border to the white frame and add the white frame to the header
+        whiteHeaderFrame.layer.addSublayer(headerBorder)
+        headerView.addSubview(whiteHeaderFrame)
+        //Set the footers color
         footerView.backgroundColor = UIColor.white
+        footerView.alpha = 0.85
+        footerView.isOpaque = false
+        //Create the footers white view
+        let whiteFooterFrame = UIView.init(frame: footerFrame)
+        whiteFooterFrame.backgroundColor = UIColor(white: 0.97, alpha: 0.5)
+        whiteFooterFrame.isOpaque = false
+        //Create the footers border
+        let footerBorder = CALayer()
+        footerBorder.backgroundColor = color
+        footerBorder.frame = CGRect(x: 0, y: 0, width: footerFrame.width, height: 0.25)
+        //Add the border to the white frame and add the white frame to the footer
+        whiteFooterFrame.layer.addSublayer(footerBorder)
+        footerView.addSubview(whiteFooterFrame)
         
         
             
