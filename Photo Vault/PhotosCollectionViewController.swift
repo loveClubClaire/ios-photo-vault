@@ -310,31 +310,51 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     }
     
     // MARK: - UICollectionViewDelegate
-    var showStatusBar = true
-    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    let galleryViewController = GalleryViewController(startIndex: indexPath.row, itemsDataSource: self, itemsDelegate: nil, displacedViewsDataSource: self, configuration: galleryConfiguration())
         
-    galleryViewController.swipedToDismissCompletion = { self.showStatusBar = true}
-    showStatusBar = false
-    
+        let headerFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: ((self.navigationController?.navigationBar.frame.height)! + UIApplication.shared.statusBarFrame.height))
+        let footerFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: (self.tabBarController?.tabBar.frame.height)!)
+        let headerView = UIView.init(frame: headerFrame)
+        let footerView = UIView.init(frame: footerFrame)
+        
+       
+        headerView.backgroundColor = UIColor.white
+        footerView.backgroundColor = UIColor.white
+        
+        
+            
+        let galleryViewController = GalleryViewController(startIndex: indexPath.row, itemsDataSource: self, itemsDelegate: nil, displacedViewsDataSource: self, configuration: galleryConfiguration())
+        
+        galleryViewController.headerView = headerView
+        galleryViewController.footerView = footerView
 
-    self.presentImageGallery(galleryViewController)
+        galleryViewController.photoSingleTap = {
+            print("Photo Tapped")
+            if self.showStatusBar == true{self.showStatusBar = false}
+            else {self.showStatusBar = true}
+            self.setNeedsStatusBarAppearanceUpdate()
+        }
+        
+        galleryViewController.swipedToDismissCompletion = {self.showStatusBar = true}
+        showStatusBar = false
+        self.setNeedsStatusBarAppearanceUpdate()
+        
+        self.presentImageGallery(galleryViewController)
     }
     
-
-    override var prefersStatusBarHidden: Bool{
-        if showStatusBar {
-            return false
-        }
+    var showStatusBar = true
+    override var prefersStatusBarHidden: Bool {
+        if showStatusBar{return false}
         return true
     }
-    
 
     
     func galleryConfiguration() -> GalleryConfiguration {
         
         return [
+            GalleryConfigurationItem.footerViewLayout(.center(0)),
+            GalleryConfigurationItem.headerViewLayout(.center(0)),
+            
             GalleryConfigurationItem.thumbnailsButtonMode(.none),
             GalleryConfigurationItem.deleteButtonMode(.none),
             GalleryConfigurationItem.closeButtonMode(.none),
@@ -367,7 +387,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             GalleryConfigurationItem.colorDismissDelay(0),
             
             GalleryConfigurationItem.itemFadeDuration(0.3),
-            GalleryConfigurationItem.decorationViewsFadeDuration(0.15),
+            GalleryConfigurationItem.decorationViewsFadeDuration(0.0),
             GalleryConfigurationItem.rotationDuration(0.15),
             
             GalleryConfigurationItem.displacementDuration(0.55),
