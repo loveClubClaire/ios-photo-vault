@@ -319,7 +319,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         let footerFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: (self.tabBarController?.tabBar.frame.height)!)
         let headerView = UIView.init(frame: headerFrame)
         let footerView = UIView.init(frame: footerFrame)
-        //What we do next is set the header views color, create a white view, and a border layer. Layering these three objects on top of each other give us the same appearance as a standard iOS navigation bar or tab bar. We do the same thing for the footer. We use the values we use because that's apperently what Apple uses. See http://stackoverflow.com/a/30154915/3594256 for more detail
+        //What we do next is set the header views color, create a white view, and a border layer. Layering these three objects on top of each other give us the same appearance as a standard iOS navigation bar or tab bar. We do the same thing for the footer. We use the values we use because that's apparently what Apple uses. See http://stackoverflow.com/a/30154915/3594256 for more detail
         //Set the header view's color
         headerView.backgroundColor = UIColor.white
         headerView.alpha = 0.85
@@ -351,6 +351,41 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         whiteFooterFrame.layer.addSublayer(footerBorder)
         footerView.addSubview(whiteFooterFrame)
         
+
+        let statusBarHeight = UIApplication.shared.statusBarFrame.height
+        
+        let backButton = UIButton(type: .custom)
+        backButton.setImage(#imageLiteral(resourceName: "BackArrow.png"), for: .normal)
+        backButton.frame.size = CGSize(width: 13, height: 21)
+        backButton.frame.origin = CGPoint(x: 12, y: ((headerView.frame.height - backButton.frame.size.height)/2 + (UIApplication.shared.statusBarFrame.height / 2)))
+        headerView.addSubview(backButton)
+        
+        
+        let countLabel = UILabel()
+        let stringTemplate = "%d of %d"
+        headerView.addSubview(countLabel)
+        
+    
+        let exportButton = UIButton(type: .custom)
+        exportButton.setImage(UIImage.imageFromSystemBarButton(.action), for: .normal)
+        exportButton.sizeToFit()
+        exportButton.frame.origin = CGPoint(x: 20.0, y: ((footerFrame.height - exportButton.frame.height) / 2))
+        footerView.addSubview(exportButton)
+        
+        let trashButton = UIButton(type: .custom)
+        trashButton.setImage(UIImage.imageFromSystemBarButton(.trash), for: .normal)
+        trashButton.sizeToFit()
+        trashButton.frame.origin = CGPoint(x: footerFrame.width - (trashButton.frame.width + 20.0), y: ((footerFrame.height - trashButton.frame.height) / 2)+((exportButton.frame.height - trashButton.frame.height)/2))
+        footerView.addSubview(trashButton)
+        
+        let addButton = UIButton(type: .custom)
+        addButton.setTitle("Add To", for: .normal)
+        addButton.setTitleColor(UIColor.init(red: 0, green: 0.478431, blue: 1, alpha: 1), for: .normal)
+        addButton.sizeToFit()
+        addButton.frame.origin = CGPoint(x: ((footerFrame.width - addButton.frame.width) / 2), y: (footerFrame.height - addButton.frame.height) / 2)
+        footerView.addSubview(addButton)
+        
+        
         
             
         let galleryViewController = GalleryViewController(startIndex: indexPath.row, itemsDataSource: self, itemsDelegate: nil, displacedViewsDataSource: self, configuration: galleryConfiguration())
@@ -358,8 +393,14 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         galleryViewController.headerView = headerView
         galleryViewController.footerView = footerView
 
+        galleryViewController.landedPageAtIndexCompletion = {index in
+            let countString = String(format: stringTemplate, arguments: [index + 1, self.images.count])
+            countLabel.attributedText =  NSAttributedString(string: countString, attributes: [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 17), NSForegroundColorAttributeName: UIColor.black])
+            countLabel.sizeToFit()
+            countLabel.frame.origin = CGPoint(x: (headerView.frame.width - countLabel.frame.width)/2, y: ((headerView.frame.height - countLabel.frame.size.height)/2 + (statusBarHeight / 2)))
+        }
+        
         galleryViewController.photoSingleTap = {
-            print("Photo Tapped")
             if self.showStatusBar == true{self.showStatusBar = false}
             else {self.showStatusBar = true}
             self.setNeedsStatusBarAppearanceUpdate()
@@ -370,6 +411,10 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         self.setNeedsStatusBarAppearanceUpdate()
         
         self.presentImageGallery(galleryViewController)
+    }
+    
+    func buttonPressTest(){
+        print("ButtonPressed")
     }
     
     var showStatusBar = true
