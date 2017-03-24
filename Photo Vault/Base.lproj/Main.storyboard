@@ -14,7 +14,7 @@
         <!--Album Table View Controller-->
         <scene sceneID="f5s-Rt-NbC">
             <objects>
-                <tableViewController id="HNk-kk-Tdw" customClass="AlbumTableViewController" customModule="Photo_Vault" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="AlbumTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="HNk-kk-Tdw" customClass="AlbumTableViewController" customModule="Photo_Vault" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="8Ef-PJ-N0k">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -195,7 +195,7 @@
         <scene sceneID="bqF-z7-qDH">
             <objects>
                 <collectionViewController id="ngC-Ob-bwg" customClass="PhotoSelectorCollectionViewController" customModule="Photo_Vault" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="p4D-9Z-KPs">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="p4D-9Z-KPs">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -246,7 +246,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Mb8-EO-Wr7" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="jrZ-9o-zrZ"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="1nB-W0-foR" customClass="CustomNavigationBar" customModule="Photo_Vault" customModuleProvider="target">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="1nB-W0-foR" customClass="CustomNavigationBar" customModule="Photo_Vault" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -278,6 +278,57 @@
             </objects>
             <point key="canvasLocation" x="1224.8" y="49.925037481259373"/>
         </scene>
+        <!--Add to Album-->
+        <scene sceneID="gMl-gj-jri">
+            <objects>
+                <tableViewController storyboardIdentifier="addToAlbumView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="o5i-CX-2CD" customClass="AddToAlbumTableViewController" customModule="Photo_Vault" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="MVn-pE-0Lj">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AddToAlbumTableViewCell" id="OeD-1x-HXY" customClass="AlbumTableViewCell" customModule="Photo_Vault" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OeD-1x-HXY" id="gbO-vW-2ZD">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZHh-hc-wHW">
+                                            <rect key="frame" x="23" y="11" width="344" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="ZHh-hc-wHW" firstAttribute="centerY" secondItem="gbO-vW-2ZD" secondAttribute="centerY" id="dr2-jS-KEV"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="ZHh-hc-wHW" secondAttribute="trailing" id="kHK-ad-mWj"/>
+                                        <constraint firstItem="ZHh-hc-wHW" firstAttribute="leading" secondItem="gbO-vW-2ZD" secondAttribute="leadingMargin" constant="15" id="kjI-VZ-ImI"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="albumNameLabel" destination="ZHh-hc-wHW" id="ZtX-mg-flS"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="o5i-CX-2CD" id="Zt5-mj-MfB"/>
+                            <outlet property="delegate" destination="o5i-CX-2CD" id="wAV-Z2-vi6"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Add to Album" id="jn4-L6-3vA">
+                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="Db1-5E-FyO">
+                            <connections>
+                                <action selector="cancel:" destination="o5i-CX-2CD" id="zwm-XX-zom"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RcU-8y-W2g" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2164" y="1691.6041979010497"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="wfg-Gt-w07">
             <objects>
@@ -295,6 +346,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Xz-tR-aLr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4300" y="948"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="wmd-Yg-K5I">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jbN-WT-yvU" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="brH-l8-AJn">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="o5i-CX-2CD" kind="relationship" relationship="rootViewController" id="VHA-aY-Lg7"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QzX-DS-ciX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1390" y="1692"/>
         </scene>
     </scenes>
 </document>

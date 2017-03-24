@@ -246,6 +246,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             self.navigationController?.view.isUserInteractionEnabled = true
             self.tabBarController?.view.isUserInteractionEnabled = true
     }
+        //Empty the selectedImages array 
+        selectedImages.removeAll()
         //Save the image file names
         NSKeyedArchiver.archiveRootObject(imageFileNames, toFile: imagesDirectoryPath.appending("/pictures"))
     }
@@ -275,6 +277,27 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             //Add the thumbnail images and it's corresponding galleryItem to our imageArray as a new Image object
             images.append(Image.init(thumbnail: image!, galleryItem: galleryItem))
         }
+    }
+    
+    func deleteImages(_ selectedImages: IndexSet){
+        var selectedElements = [String]()
+        for index in selectedImages{
+            selectedElements.append(imageFileNames[index])
+        }
+        
+        for imagePath in selectedElements {
+            let thumbnailPath = imagePath.components(separatedBy: ".")[0] + "thumbnail.jpg"
+            do {
+                try FileManager.default.removeItem(atPath: imagesDirectoryPath.appending("/\(thumbnailPath)"))
+                try FileManager.default.removeItem(atPath: imagesDirectoryPath.appending("/\(imagePath)"))
+            }
+            catch{
+                os_log("Failed to delete image & thumbnail...", log: OSLog.default, type: .error)
+            }
+        }
+        let remainingFileNames = imageFileNames.filter{!selectedElements.contains($0)}
+        imageFileNames = remainingFileNames
+        NSKeyedArchiver.archiveRootObject(remainingFileNames, toFile: imagesDirectoryPath.appending("/pictures"))
     }
     
     
@@ -350,49 +373,50 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         //Add the border to the white frame and add the white frame to the footer
         whiteFooterFrame.layer.addSublayer(footerBorder)
         footerView.addSubview(whiteFooterFrame)
-        
-
+        //The next step is to add buttons and labels to the header and footer. In the case of the buttons, we create a button, give it an image, set the size of it's frame, set it's origin, and then add it to the headerView or the footerView
+        //For the countLabel, we define only the height of the status bar, the stringTemplate, and a new UIlabel object. We add the empty label to the header view. We modify this empty label in a later completion block.
+        //We define the status bar height here because the status bar is active and it gives us a non zero value. The completion block fires when the status bar is disabled, even though the label is shown when the status bar is enabled. Getting the status bar height here allows the label to appear in the expected position when visible.
         let statusBarHeight = UIApplication.shared.statusBarFrame.height
-        
+        let stringTemplate = "%d of %d"
+        let countLabel = UILabel()
+        headerView.addSubview(countLabel)
+        //Here we define the back button, give it an image, set it's frame size, set it's origin, and then add it to the headerView. The origin's Y value centers the back button in the header. (Keep in mind the header frame INCLUDES the size of the status bar, so it's not the TRUE center of the frame, but the center of the header sans status bar)
         let backButton = UIButton(type: .custom)
         backButton.setImage(#imageLiteral(resourceName: "BackArrow.png"), for: .normal)
         backButton.frame.size = CGSize(width: 13, height: 21)
         backButton.frame.origin = CGPoint(x: 12, y: ((headerView.frame.height - backButton.frame.size.height)/2 + (UIApplication.shared.statusBarFrame.height / 2)))
+        backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         headerView.addSubview(backButton)
-        
-        
-        let countLabel = UILabel()
-        let stringTemplate = "%d of %d"
-        headerView.addSubview(countLabel)
-        
-    
+        //Here we define the export image button. The set image comes from the .action Bar Button Item. The frame is set to the size of this image and then it's given an origin which centers the button's Y position in the footer. Then the button is added to the footer.
         let exportButton = UIButton(type: .custom)
         exportButton.setImage(UIImage.imageFromSystemBarButton(.action), for: .normal)
         exportButton.sizeToFit()
         exportButton.frame.origin = CGPoint(x: 20.0, y: ((footerFrame.height - exportButton.frame.height) / 2))
         footerView.addSubview(exportButton)
-        
+        //Creating the trash button and adding it to the footer view
         let trashButton = UIButton(type: .custom)
         trashButton.setImage(UIImage.imageFromSystemBarButton(.trash), for: .normal)
         trashButton.sizeToFit()
         trashButton.frame.origin = CGPoint(x: footerFrame.width - (trashButton.frame.width + 20.0), y: ((footerFrame.height - trashButton.frame.height) / 2)+((exportButton.frame.height - trashButton.frame.height)/2))
+        trashButton.addTarget(self, action: #selector(trashButtonPressed), for: .touchUpInside)
         footerView.addSubview(trashButton)
-        
+        //Creating the add button and adding it to the footer view. We also set it's color. That color is the system blue of the other images.
         let addButton = UIButton(type: .custom)
         addButton.setTitle("Add To", for: .normal)
         addButton.setTitleColor(UIColor.init(red: 0, green: 0.478431, blue: 1, alpha: 1), for: .normal)
         addButton.sizeToFit()
         addButton.frame.origin = CGPoint(x: ((footerFrame.width - addButton.frame.width) / 2), y: (footerFrame.height - addButton.frame.height) / 2)
+        addButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
         footerView.addSubview(addButton)
         
-        
-        
+
             
         let galleryViewController = GalleryViewController(startIndex: indexPath.row, itemsDataSource: self, itemsDelegate: nil, displacedViewsDataSource: self, configuration: galleryConfiguration())
         
         galleryViewController.headerView = headerView
         galleryViewController.footerView = footerView
 
+        
         galleryViewController.landedPageAtIndexCompletion = {index in
             let countString = String(format: stringTemplate, arguments: [index + 1, self.images.count])
             countLabel.attributedText =  NSAttributedString(string: countString, attributes: [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 17), NSForegroundColorAttributeName: UIColor.black])
@@ -406,15 +430,87 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             self.setNeedsStatusBarAppearanceUpdate()
         }
         
+        backButtonClosure = {
+            galleryViewController.closeGallery(true, completion: nil)
+        }
+        
+        trashButtonClosure = {
+            let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            let destroyAction = UIAlertAction(title: "Delete Photo", style: .destructive, handler: {(action : UIAlertAction!) -> Void in
+                let index = Int((countLabel.text?.components(separatedBy: " of ")[0])!)! - 1
+                self.images.remove(at: index)
+                self.deleteImages([index])
+                self.collectionView?.reloadData()
+                galleryViewController.removePage(atIndex: index)
+            })
+            
+            alertController.addAction(cancelAction)
+            alertController.addAction(destroyAction)
+            
+            galleryViewController.present(alertController, animated: true, completion:nil)
+        }
+        
+        addButtonClosure = {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let secondViewController = storyboard.instantiateViewController(withIdentifier: "addToAlbumView")  as! AddToAlbumTableViewController
+            secondViewController.passedAlbum = self.albumName
+            secondViewController.selectedPhotos = [indexPath.row]
+            let navController = UINavigationController(rootViewController: secondViewController)
+            galleryViewController.present(navController, animated: true, completion: nil)
+        }
+        
         galleryViewController.swipedToDismissCompletion = {self.showStatusBar = true}
         showStatusBar = false
         self.setNeedsStatusBarAppearanceUpdate()
         
         self.presentImageGallery(galleryViewController)
     }
+    func commentWrap(){
+        /*
+         // Uncomment this method to specify if the specified item should be highlighted during tracking
+         override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+         return true
+         }
+         */
+        
+        /*
+         // Uncomment this method to specify if the specified item should be selected
+         override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+         return true
+         }
+         */
+        
+        /*
+         // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
+         override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
+         return false
+         }
+         
+         override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
+         return false
+         }
+         
+         override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
+         
+         }
+         */
+    }
     
-    func buttonPressTest(){
-        print("ButtonPressed")
+    //MARK: - Gallery Configuration
+    var backButtonClosure: (() -> Void) = {}
+    func backButtonPressed(){
+        backButtonClosure()
+    }
+    
+    var trashButtonClosure: (() -> Void) = {}
+    func trashButtonPressed(){
+        trashButtonClosure()
+    }
+    
+    var addButtonClosure: (() -> Void) = {}
+    func addButtonPressed(){
+        addButtonClosure()
     }
     
     var showStatusBar = true
@@ -422,7 +518,6 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         if showStatusBar{return false}
         return true
     }
-
     
     func galleryConfiguration() -> GalleryConfiguration {
         
@@ -475,35 +570,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             GalleryConfigurationItem.displacementInsetMargin(50)
         ]
     }
-    
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
 
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-    
-    }
-    */
 }
 // MARK: - ImageView Extensions
 //Done as extensions because that's how this works I guess
