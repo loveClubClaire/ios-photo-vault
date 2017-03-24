@@ -12,7 +12,7 @@ class AddToAlbumTableViewController: UITableViewController {
 
     var albums = [String]()
     
-    var passedAlbum: String?
+    var originAlbum: String?
     var selectedPhotos: IndexSet?
     
     override func viewDidLoad() {
@@ -53,9 +53,24 @@ class AddToAlbumTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //Get the origin albums image file names
+        let documentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.path
+        let imagesDirectoryPath = documentsDirectory.appending("/Photos")
+        let originFileNames = (NSKeyedUnarchiver.unarchiveObject(withFile: imagesDirectoryPath.appending("/\(originAlbum!)_albumPictures")) as? [String]) ?? []
+        //Get an array of the origin albums selected image file names
+        var selectedFileNames = [String]()
+        for index in selectedPhotos!{
+            selectedFileNames.append(originFileNames[index])
+        }
+        //Get the destination albums image file names
+        let destinationAlbum = (tableView.cellForRow(at: indexPath) as! AlbumTableViewCell).albumNameLabel.text
+        var destinationFileNames = (NSKeyedUnarchiver.unarchiveObject(withFile: imagesDirectoryPath.appending("/\(destinationAlbum!)_albumPictures")) as? [String]) ?? []
+        //Append the origin albums selected image file names to the destination albums image file names
+        destinationFileNames.append(contentsOf: selectedFileNames)
+        //Save the new destinationFileNames
+        NSKeyedArchiver.archiveRootObject(destinationFileNames, toFile: imagesDirectoryPath.appending("/\(destinationAlbum!)_albumPictures"))
         
-        
-         dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
 }

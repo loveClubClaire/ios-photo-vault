@@ -40,7 +40,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         //Create a folder for storing this albums photos if one does not already exist.
         let documentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.path
         // Create a new path for the new images folder
-        imagesDirectoryPath = documentsDirectory.appending("/Photos/\(albumName!)")
+        imagesDirectoryPath = documentsDirectory.appending("/Photos")
         var objcBool:ObjCBool = true
         let isExist = FileManager.default.fileExists(atPath: imagesDirectoryPath, isDirectory: &objcBool)
         // If the folder with the given path doesn't exist already, create it
@@ -249,12 +249,12 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         //Empty the selectedImages array 
         selectedImages.removeAll()
         //Save the image file names
-        NSKeyedArchiver.archiveRootObject(imageFileNames, toFile: imagesDirectoryPath.appending("/pictures"))
+        NSKeyedArchiver.archiveRootObject(imageFileNames, toFile: imagesDirectoryPath.appending("/\(albumName!)_albumPictures"))
     }
 
     func loadImages(){
         //Load the array of image file names
-        imageFileNames = (NSKeyedUnarchiver.unarchiveObject(withFile: imagesDirectoryPath.appending("/pictures")) as? [String]) ?? []
+        imageFileNames = (NSKeyedUnarchiver.unarchiveObject(withFile: imagesDirectoryPath.appending("/\(albumName!)_albumPictures")) as? [String]) ?? []
         //For every imageFileName..
         for imagePath in imageFileNames{
             //Generate a path to the thumbnail image and load it from disk into memory
@@ -297,7 +297,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         }
         let remainingFileNames = imageFileNames.filter{!selectedElements.contains($0)}
         imageFileNames = remainingFileNames
-        NSKeyedArchiver.archiveRootObject(remainingFileNames, toFile: imagesDirectoryPath.appending("/pictures"))
+        NSKeyedArchiver.archiveRootObject(remainingFileNames, toFile: imagesDirectoryPath.appending("/\(albumName!)_albumPictures"))
     }
     
     
@@ -454,7 +454,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         addButtonClosure = {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let secondViewController = storyboard.instantiateViewController(withIdentifier: "addToAlbumView")  as! AddToAlbumTableViewController
-            secondViewController.passedAlbum = self.albumName
+            secondViewController.originAlbum = self.albumName
             secondViewController.selectedPhotos = [indexPath.row]
             let navController = UINavigationController(rootViewController: secondViewController)
             galleryViewController.present(navController, animated: true, completion: nil)
