@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		06F2FD4C5A65292F88B5CB45 /* Pods_Photo_Vault.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFF9C1B8385E10F29C607BF /* Pods_Photo_Vault.framework */; };
+		C04BECB21E81C255006C858D /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04BECB11E81C255006C858D /* CustomNavigationBar.swift */; };
+		C04BECB51E8312EC006C858D /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04BECB41E8312EC006C858D /* UIImage+Extension.swift */; };
+		C04BECB91E83512F006C858D /* BackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = C04BECB81E83512F006C858D /* BackArrow.png */; };
 		C080EFDB1E5EA5590072C55F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080EFDA1E5EA5590072C55F /* AppDelegate.swift */; };
 		C080EFE21E5EA5590072C55F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C080EFE01E5EA5590072C55F /* Main.storyboard */; };
 		C080EFE41E5EA5590072C55F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C080EFE31E5EA5590072C55F /* Assets.xcassets */; };
@@ -22,8 +25,7 @@
 		C080F00E1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F00D1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift */; };
 		C080F0101E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F00F1E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift */; };
 		C080F0131E64BF6F0072C55F /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F0121E64BF6F0072C55F /* Array+Extension.swift */; };
-		C080F0181E663F210072C55F /* test.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C080F0171E663F210072C55F /* test.jpg */; };
-		C080F01A1E66408F0072C55F /* test2.JPG in Resources */ = {isa = PBXBuildFile; fileRef = C080F0191E66408F0072C55F /* test2.JPG */; };
+		C0DCCB681E84C4FE006D1984 /* AddToAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DCCB671E84C4FE006D1984 /* AddToAlbumTableViewController.swift */; };
 		F787C2B769AA311D8A716E37 /* Pods_Photo_VaultTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B27D5E62667323BD8A2EF90 /* Pods_Photo_VaultTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +45,9 @@
 		5B27D5E62667323BD8A2EF90 /* Pods_Photo_VaultTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photo_VaultTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABFF9C1B8385E10F29C607BF /* Pods_Photo_Vault.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Photo_Vault.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B30D136DEAB35101EEC7A8B0 /* Pods-Photo Vault.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photo Vault.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Photo Vault/Pods-Photo Vault.debug.xcconfig"; sourceTree = "<group>"; };
+		C04BECB11E81C255006C858D /* CustomNavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
+		C04BECB41E8312EC006C858D /* UIImage+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		C04BECB81E83512F006C858D /* BackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BackArrow.png; sourceTree = "<group>"; };
 		C080EFD71E5EA5590072C55F /* Photo Vault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Photo Vault.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C080EFDA1E5EA5590072C55F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C080EFE11E5EA5590072C55F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -61,8 +66,7 @@
 		C080F00D1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoSelectorCollectionViewController.swift; sourceTree = "<group>"; };
 		C080F00F1E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
 		C080F0121E64BF6F0072C55F /* Array+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array+Extension.swift"; path = "../Array+Extension.swift"; sourceTree = "<group>"; };
-		C080F0171E663F210072C55F /* test.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test.jpg; sourceTree = "<group>"; };
-		C080F0191E66408F0072C55F /* test2.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test2.JPG; sourceTree = "<group>"; };
+		C0DCCB671E84C4FE006D1984 /* AddToAlbumTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddToAlbumTableViewController.swift; sourceTree = "<group>"; };
 		FE2187A6F30C87095893D8D9 /* Pods-Photo VaultTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photo VaultTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photo VaultTests/Pods-Photo VaultTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -130,8 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				C080EFDA1E5EA5590072C55F /* AppDelegate.swift */,
-				C080F0191E66408F0072C55F /* test2.JPG */,
-				C080F0171E663F210072C55F /* test.jpg */,
+				C04BECB81E83512F006C858D /* BackArrow.png */,
 				C080F0061E63999E0072C55F /* Photo Selector */,
 				C080EFFC1E5F8DFF0072C55F /* TableViewControllers */,
 				C080EFFD1E5F8E0F0072C55F /* TableViewCells */,
@@ -157,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				C080EFFE1E5F8E620072C55F /* AlbumTableViewController.swift */,
+				C0DCCB671E84C4FE006D1984 /* AddToAlbumTableViewController.swift */,
 				C080F0021E5F94D80072C55F /* PhotosCollectionViewController.swift */,
 			);
 			name = TableViewControllers;
@@ -185,6 +189,8 @@
 		C080F0111E64BF300072C55F /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				C04BECB11E81C255006C858D /* CustomNavigationBar.swift */,
+				C04BECB41E8312EC006C858D /* UIImage+Extension.swift */,
 				C080F0121E64BF6F0072C55F /* Array+Extension.swift */,
 			);
 			name = Extensions;
@@ -281,9 +287,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C080EFE71E5EA5590072C55F /* LaunchScreen.storyboard in Resources */,
-				C080F01A1E66408F0072C55F /* test2.JPG in Resources */,
+				C04BECB91E83512F006C858D /* BackArrow.png in Resources */,
 				C080EFE41E5EA5590072C55F /* Assets.xcassets in Resources */,
-				C080F0181E663F210072C55F /* test.jpg in Resources */,
 				C080EFE21E5EA5590072C55F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -395,12 +400,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C04BECB21E81C255006C858D /* CustomNavigationBar.swift in Sources */,
 				C080EFDB1E5EA5590072C55F /* AppDelegate.swift in Sources */,
 				C080F0131E64BF6F0072C55F /* Array+Extension.swift in Sources */,
+				C04BECB51E8312EC006C858D /* UIImage+Extension.swift in Sources */,
 				C080F00C1E639B650072C55F /* PhotoSelectorTableViewCell.swift in Sources */,
 				C080F0051E5F95A70072C55F /* PhotoCollectionViewCell.swift in Sources */,
 				C080F0101E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift in Sources */,
 				C080EFFF1E5F8E620072C55F /* AlbumTableViewController.swift in Sources */,
+				C0DCCB681E84C4FE006D1984 /* AddToAlbumTableViewController.swift in Sources */,
 				C080F00E1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift in Sources */,
 				C080F0011E5F8E790072C55F /* AlbumTableViewCell.swift in Sources */,
 				C080F0031E5F94D80072C55F /* PhotosCollectionViewController.swift in Sources */,
@@ -618,6 +626,7 @@
 				C080EFF81E5EA5590072C55F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C080EFF91E5EA5590072C55F /* Build configuration list for PBXNativeTarget "Photo VaultTests" */ = {
 			isa = XCConfigurationList;
@@ -626,6 +635,7 @@
 				C080EFFB1E5EA5590072C55F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

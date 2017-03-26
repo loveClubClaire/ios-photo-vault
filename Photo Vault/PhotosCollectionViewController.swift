@@ -22,7 +22,7 @@ struct Image {
     let galleryItem: GalleryItem?
 }
 
-class PhotosCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class PhotosCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIDocumentInteractionControllerDelegate {
     
     var images = [Image]()
     var archivePath: String?
@@ -333,6 +333,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     }
     
     // MARK: - UICollectionViewDelegate
+    let docController = UIDocumentInteractionController()
+    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         //Define the colorspace and the color for the header and footer border
         let space : CGColorSpace = CGColorSpaceCreateDeviceRGB()
@@ -392,6 +394,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         exportButton.setImage(UIImage.imageFromSystemBarButton(.action), for: .normal)
         exportButton.sizeToFit()
         exportButton.frame.origin = CGPoint(x: 20.0, y: ((footerFrame.height - exportButton.frame.height) / 2))
+        exportButton.addTarget(self, action: #selector(exportButtonPressed), for: .touchUpInside)
         footerView.addSubview(exportButton)
         //Creating the trash button and adding it to the footer view
         let trashButton = UIButton(type: .custom)
@@ -460,12 +463,22 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             galleryViewController.present(navController, animated: true, completion: nil)
         }
         
+        exportButtonClosure = {
+            self.docController.url = URL.init(fileURLWithPath: (self.imagesDirectoryPath + "/" + self.imageFileNames[indexPath.row]))
+            self.currentViewController = galleryViewController
+            self.docController.delegate = self
+            self.docController.presentOptionsMenu(from: galleryViewController.view.frame, in: galleryViewController.view, animated: true)
+        }
+        
         galleryViewController.swipedToDismissCompletion = {self.showStatusBar = true}
         showStatusBar = false
         self.setNeedsStatusBarAppearanceUpdate()
         
         self.presentImageGallery(galleryViewController)
     }
+    
+    
+    
     func commentWrap(){
         /*
          // Uncomment this method to specify if the specified item should be highlighted during tracking
@@ -511,6 +524,11 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     var addButtonClosure: (() -> Void) = {}
     func addButtonPressed(){
         addButtonClosure()
+    }
+    
+    var exportButtonClosure: (() -> Void) = {}
+    func exportButtonPressed(){
+        exportButtonClosure()
     }
     
     var showStatusBar = true
@@ -571,7 +589,20 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         ]
     }
 
+    
+    // MARK: - UIDocumentInteractionControllerDelegate
+    var currentViewController: UIViewController?
+    
+    func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController{
+        return currentViewController!
+    }
+
+    
+    
 }
+
+
+
 // MARK: - ImageView Extensions
 //Done as extensions because that's how this works I guess
 extension PhotosCollectionViewController: GalleryDisplacedViewsDataSource {
