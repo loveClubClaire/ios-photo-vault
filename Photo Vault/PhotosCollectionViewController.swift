@@ -383,21 +383,21 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         let countLabel = UILabel()
         headerView.addSubview(countLabel)
         //Here we define the back button, give it an image, set it's frame size, set it's origin, and then add it to the headerView. The origin's Y value centers the back button in the header. (Keep in mind the header frame INCLUDES the size of the status bar, so it's not the TRUE center of the frame, but the center of the header sans status bar)
-        let backButton = UIButton(type: .custom)
+        let backButton = CustomUIButton(type: .custom)
         backButton.setImage(#imageLiteral(resourceName: "BackArrow.png"), for: .normal)
         backButton.frame.size = CGSize(width: 13, height: 21)
         backButton.frame.origin = CGPoint(x: 12, y: ((headerView.frame.height - backButton.frame.size.height)/2 + (UIApplication.shared.statusBarFrame.height / 2)))
         backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         headerView.addSubview(backButton)
         //Here we define the export image button. The set image comes from the .action Bar Button Item. The frame is set to the size of this image and then it's given an origin which centers the button's Y position in the footer. Then the button is added to the footer.
-        let exportButton = UIButton(type: .custom)
+        let exportButton = CustomUIButton(type: .custom)
         exportButton.setImage(UIImage.imageFromSystemBarButton(.action), for: .normal)
         exportButton.sizeToFit()
         exportButton.frame.origin = CGPoint(x: 20.0, y: ((footerFrame.height - exportButton.frame.height) / 2))
         exportButton.addTarget(self, action: #selector(exportButtonPressed), for: .touchUpInside)
         footerView.addSubview(exportButton)
         //Creating the trash button and adding it to the footer view
-        let trashButton = UIButton(type: .custom)
+        let trashButton = CustomUIButton(type: .custom)
         trashButton.setImage(UIImage.imageFromSystemBarButton(.trash), for: .normal)
         trashButton.sizeToFit()
         trashButton.frame.origin = CGPoint(x: footerFrame.width - (trashButton.frame.width + 20.0), y: ((footerFrame.height - trashButton.frame.height) / 2)+((exportButton.frame.height - trashButton.frame.height)/2))
@@ -464,7 +464,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         }
         
         exportButtonClosure = {
-            self.docController.url = URL.init(fileURLWithPath: (self.imagesDirectoryPath + "/" + self.imageFileNames[indexPath.row]))
+            let index = Int((countLabel.text?.components(separatedBy: " of ")[0])!)! - 1
+            self.docController.url = URL.init(fileURLWithPath: (self.imagesDirectoryPath + "/" + self.imageFileNames[index]))
             self.currentViewController = galleryViewController
             self.docController.delegate = self
             self.docController.presentOptionsMenu(from: galleryViewController.view.frame, in: galleryViewController.view, animated: true)
@@ -628,8 +629,6 @@ extension PhotosCollectionViewController: GalleryItemsDataSource{
         return images[index].galleryItem!
     }
 }
-
-
 // Some external custom UIImageView we want to show in the gallery
 class FLSomeAnimatedImage: UIImageView {}
 // Extend ImageBaseController so we get all the functionality for free

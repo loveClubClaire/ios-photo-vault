@@ -25,6 +25,7 @@
 		C080F00E1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F00D1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift */; };
 		C080F0101E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F00F1E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift */; };
 		C080F0131E64BF6F0072C55F /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F0121E64BF6F0072C55F /* Array+Extension.swift */; };
+		C0B335451E8D916200D4091D /* CustomUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B335441E8D916200D4091D /* CustomUIButton.swift */; };
 		C0DCCB681E84C4FE006D1984 /* AddToAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DCCB671E84C4FE006D1984 /* AddToAlbumTableViewController.swift */; };
 		F787C2B769AA311D8A716E37 /* Pods_Photo_VaultTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B27D5E62667323BD8A2EF90 /* Pods_Photo_VaultTests.framework */; };
 /* End PBXBuildFile section */
@@ -66,6 +67,7 @@
 		C080F00D1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoSelectorCollectionViewController.swift; sourceTree = "<group>"; };
 		C080F00F1E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
 		C080F0121E64BF6F0072C55F /* Array+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array+Extension.swift"; path = "../Array+Extension.swift"; sourceTree = "<group>"; };
+		C0B335441E8D916200D4091D /* CustomUIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomUIButton.swift; sourceTree = "<group>"; };
 		C0DCCB671E84C4FE006D1984 /* AddToAlbumTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddToAlbumTableViewController.swift; sourceTree = "<group>"; };
 		FE2187A6F30C87095893D8D9 /* Pods-Photo VaultTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photo VaultTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photo VaultTests/Pods-Photo VaultTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -159,8 +161,8 @@
 		C080EFFC1E5F8DFF0072C55F /* TableViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				C080EFFE1E5F8E620072C55F /* AlbumTableViewController.swift */,
 				C0DCCB671E84C4FE006D1984 /* AddToAlbumTableViewController.swift */,
+				C080EFFE1E5F8E620072C55F /* AlbumTableViewController.swift */,
 				C080F0021E5F94D80072C55F /* PhotosCollectionViewController.swift */,
 			);
 			name = TableViewControllers;
@@ -189,6 +191,7 @@
 		C080F0111E64BF300072C55F /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				C0B335441E8D916200D4091D /* CustomUIButton.swift */,
 				C04BECB11E81C255006C858D /* CustomNavigationBar.swift */,
 				C04BECB41E8312EC006C858D /* UIImage+Extension.swift */,
 				C080F0121E64BF6F0072C55F /* Array+Extension.swift */,
@@ -408,6 +411,7 @@
 				C080F0051E5F95A70072C55F /* PhotoCollectionViewCell.swift in Sources */,
 				C080F0101E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift in Sources */,
 				C080EFFF1E5F8E620072C55F /* AlbumTableViewController.swift in Sources */,
+				C0B335451E8D916200D4091D /* CustomUIButton.swift in Sources */,
 				C0DCCB681E84C4FE006D1984 /* AddToAlbumTableViewController.swift in Sources */,
 				C080F00E1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift in Sources */,
 				C080F0011E5F8E790072C55F /* AlbumTableViewCell.swift in Sources */,
