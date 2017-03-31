@@ -5,6 +5,7 @@
 //  Created by Zachary Whitten on 2/23/17.
 //  Copyright © 2017 16^2. All rights reserved.
 //
+//  https://the-nerd.be/2015/10/06/3d-touch-peek-and-pop-tutorial/
 
 import UIKit
 import os.log
@@ -22,7 +23,7 @@ struct Image {
     let galleryItem: GalleryItem?
 }
 
-class PhotosCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIDocumentInteractionControllerDelegate {
+class PhotosCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIDocumentInteractionControllerDelegate, UIViewControllerPreviewingDelegate {
     
     var images = [Image]()
     var archivePath: String?
@@ -37,6 +38,10 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        //If the device has a 3D touch screen, register our view controller for peeking and popping
+        if(traitCollection.forceTouchCapability == .available){
+            registerForPreviewing(with: self as UIViewControllerPreviewingDelegate, sourceView: view)
+        }
         //Create a folder for storing this albums photos if one does not already exist.
         let documentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.path
         // Create a new path for the new images folder
@@ -591,6 +596,24 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     }
 
     
+    // MARK: - UIViewControllerPreviewingDelegate
+    var selectedCell: IndexPath?
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        //print(location)
+        //account for navigation bar
+        guard let indexPath = collectionView?.indexPathForItem(at: location) else { return nil }
+        selectedCell = indexPath
+        guard let detailVC = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as? DetailViewController else { return nil }
+        let fetchedData = FileManager.default.contents(atPath: self.imagesDirectoryPath.appending("/\(imageFileNames[indexPath.row])"))
+        let fetchedImage = UIImage(data: fetchedData!)
+        detailVC.photo = fetchedImage
+        return detailVC
+    }
+    
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
+        collectionView(self.collectionView!, didSelectItemAt: selectedCell!)
+    }
+    
     // MARK: - UIDocumentInteractionControllerDelegate
     var currentViewController: UIViewController?
     
@@ -598,8 +621,6 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         return currentViewController!
     }
 
-    
-    
 }
 
 
