@@ -598,18 +598,22 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     
     // MARK: - UIViewControllerPreviewingDelegate
     var selectedCell: IndexPath?
+    //Called when an item is peeked at
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        //print(location)
-        //account for navigation bar
-        guard let indexPath = collectionView?.indexPathForItem(at: location) else { return nil }
+        //We correct the given location variable by adding the UIscrollView offset to the location
+        let correctedLocation = CGPoint(x: location.x, y: location.y + (collectionView?.contentOffset.y)!)
+        //We then convert that corrected location into an index path
+        guard let indexPath = collectionView?.indexPathForItem(at: correctedLocation) else { return nil }
         selectedCell = indexPath
+        //Instantiate the view peek view controller, fetch the image data from disk, and then set the loaded image as the view contorllers image
         guard let detailVC = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as? DetailViewController else { return nil }
         let fetchedData = FileManager.default.contents(atPath: self.imagesDirectoryPath.appending("/\(imageFileNames[indexPath.row])"))
         let fetchedImage = UIImage(data: fetchedData!)
         detailVC.photo = fetchedImage
+        //Return the peek view controller
         return detailVC
     }
-    
+    //Called when an item is popped
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
         collectionView(self.collectionView!, didSelectItemAt: selectedCell!)
     }
