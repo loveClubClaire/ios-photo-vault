@@ -85,10 +85,11 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     // MARK: - UICollectionViewDelegateFlowLayout
     let itemsPerRow: CGFloat = 4
     let sectionInsets = UIEdgeInsets(top: 1.0, left: 0, bottom: 0, right: 0)
+    let pointWidth = UIScreen.main.nativeBounds.width / UIScreen.main.nativeScale
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var widthPerItem = floor(view.frame.width / itemsPerRow)
-        if widthPerItem == view.frame.width / itemsPerRow {
+        var widthPerItem = floor(pointWidth / itemsPerRow)
+        if widthPerItem == pointWidth / itemsPerRow {
             widthPerItem = widthPerItem - 0.5
         }
         return CGSize(width: widthPerItem, height: widthPerItem)
@@ -100,11 +101,11 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         //Calculates the minimum spacing the autolayout provides for width. This value is returned so the spacing is the same for the height as well as the width
-        var widthPerItem = floor(view.frame.width / itemsPerRow)
-        if widthPerItem == view.frame.width / itemsPerRow {
+        var widthPerItem = floor(pointWidth / itemsPerRow)
+        if widthPerItem == pointWidth / itemsPerRow {
             widthPerItem = widthPerItem - 0.5
         }
-        return (view.frame.width - (widthPerItem * itemsPerRow)) / (itemsPerRow - 1)
+        return (pointWidth - (widthPerItem * itemsPerRow)) / (itemsPerRow - 1)
     }
     
     // MARK: - Navigation
@@ -341,6 +342,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     let docController = UIDocumentInteractionController()
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        //Get the portrait width of the iOS device
+        let pointWidth = UIScreen.main.nativeBounds.height / UIScreen.main.nativeScale
         //Define the colorspace and the color for the header and footer border
         let space : CGColorSpace = CGColorSpaceCreateDeviceRGB()
         let color : CGColor = CGColor(colorSpace: space, components: [0.0, 0.0, 0.0, 0.3])!
@@ -358,10 +361,11 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         let whiteHeaderFrame = UIView.init(frame: headerFrame)
         whiteHeaderFrame.backgroundColor = UIColor(white: 0.97, alpha: 0.5)
         whiteHeaderFrame.isOpaque = false
+        whiteHeaderFrame.autoresizingMask = [.flexibleWidth]
         //Create the headers border
         let headerBorder = CALayer()
         headerBorder.backgroundColor = color
-        headerBorder.frame = CGRect(x: 0, y: headerFrame.height - 0.25, width: headerFrame.width, height: 0.25)
+        headerBorder.frame = CGRect(x: 0, y: headerFrame.height - 0.25, width: pointWidth, height: 0.25)
         //Add the border to the white frame and add the white frame to the header
         whiteHeaderFrame.layer.addSublayer(headerBorder)
         headerView.addSubview(whiteHeaderFrame)
@@ -373,10 +377,11 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         let whiteFooterFrame = UIView.init(frame: footerFrame)
         whiteFooterFrame.backgroundColor = UIColor(white: 0.97, alpha: 0.5)
         whiteFooterFrame.isOpaque = false
+        whiteFooterFrame.autoresizingMask = [.flexibleWidth]
         //Create the footers border
         let footerBorder = CALayer()
         footerBorder.backgroundColor = color
-        footerBorder.frame = CGRect(x: 0, y: 0, width: footerFrame.width, height: 0.25)
+        footerBorder.frame = CGRect(x: 0, y: 0, width: pointWidth, height: 0.25)
         //Add the border to the white frame and add the white frame to the footer
         whiteFooterFrame.layer.addSublayer(footerBorder)
         footerView.addSubview(whiteFooterFrame)
@@ -386,6 +391,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         let statusBarHeight = UIApplication.shared.statusBarFrame.height
         let stringTemplate = "%d of %d"
         let countLabel = UILabel()
+        countLabel.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin]
         headerView.addSubview(countLabel)
         //Here we define the back button, give it an image, set it's frame size, set it's origin, and then add it to the headerView. The origin's Y value centers the back button in the header. (Keep in mind the header frame INCLUDES the size of the status bar, so it's not the TRUE center of the frame, but the center of the header sans status bar)
         let backButton = CustomUIButton(type: .custom)
@@ -407,6 +413,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         trashButton.sizeToFit()
         trashButton.frame.origin = CGPoint(x: footerFrame.width - (trashButton.frame.width + 20.0), y: ((footerFrame.height - trashButton.frame.height) / 2)+((exportButton.frame.height - trashButton.frame.height)/2))
         trashButton.addTarget(self, action: #selector(trashButtonPressed), for: .touchUpInside)
+        trashButton.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin]
         footerView.addSubview(trashButton)
         //Creating the add button and adding it to the footer view. We also set it's color. That color is the system blue of the other images.
         let addButton = UIButton(type: .custom)
@@ -415,6 +422,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         addButton.sizeToFit()
         addButton.frame.origin = CGPoint(x: ((footerFrame.width - addButton.frame.width) / 2), y: (footerFrame.height - addButton.frame.height) / 2)
         addButton.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
+        addButton.autoresizingMask = [.flexibleLeftMargin, .flexibleRightMargin]
         footerView.addSubview(addButton)
         
 
@@ -546,8 +554,9 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     func galleryConfiguration() -> GalleryConfiguration {
         
         return [
-            GalleryConfigurationItem.footerViewLayout(.center(0)),
-            GalleryConfigurationItem.headerViewLayout(.center(0)),
+            
+            GalleryConfigurationItem.footerViewLayout(.pinBoth(0, 0, 0)),
+            GalleryConfigurationItem.headerViewLayout(.pinBoth(0, 0, 0)),
             
             GalleryConfigurationItem.thumbnailsButtonMode(.none),
             GalleryConfigurationItem.deleteButtonMode(.none),
