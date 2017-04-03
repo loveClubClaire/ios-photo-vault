@@ -164,6 +164,12 @@ class AlbumTableViewController: UITableViewController {
             saveButton?.isEnabled = false
         }
     }
+    
+    //MARK: - Overrides
+    override var prefersStatusBarHidden: Bool {
+        return false
+    }
+
 
 
 }

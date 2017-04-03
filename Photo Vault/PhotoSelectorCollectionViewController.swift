@@ -41,6 +41,10 @@ class PhotoSelectorCollectionViewController: UICollectionViewController, UIColle
         // Dispose of any resources that can be recreated.
     }
     
+    override var prefersStatusBarHidden: Bool {
+        return false
+    }
+    
     /*
      // MARK: - Navigation
      
@@ -81,10 +85,11 @@ class PhotoSelectorCollectionViewController: UICollectionViewController, UIColle
     // MARK: UICollectionViewDelegateFlowLayout
     let itemsPerRow: CGFloat = 4
     let sectionInsets = UIEdgeInsets(top: 1.0, left: 0, bottom: 0, right: 0)
+    let pointWidth = UIScreen.main.nativeBounds.width / UIScreen.main.nativeScale
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,sizeForItemAt indexPath: IndexPath) -> CGSize {
-        var widthPerItem = floor(view.frame.width / itemsPerRow)
-        if widthPerItem == view.frame.width / itemsPerRow {
+        var widthPerItem = floor(pointWidth / itemsPerRow)
+        if widthPerItem == pointWidth / itemsPerRow {
             widthPerItem = widthPerItem - 0.5
         }
         return CGSize(width: widthPerItem, height: widthPerItem)
@@ -96,11 +101,11 @@ class PhotoSelectorCollectionViewController: UICollectionViewController, UIColle
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         //Calculates the minimum spacing the autolayout provides for width. This value is returned so the spacing is the same for the height as well as the width
-        var widthPerItem = floor(view.frame.width / itemsPerRow)
-        if widthPerItem == view.frame.width / itemsPerRow {
+        var widthPerItem = floor(pointWidth / itemsPerRow)
+        if widthPerItem == pointWidth / itemsPerRow {
             widthPerItem = widthPerItem - 0.5
         }
-        return (view.frame.width - (widthPerItem * itemsPerRow)) / (itemsPerRow - 1)
+        return (pointWidth - (widthPerItem * itemsPerRow)) / (itemsPerRow - 1)
     }
     
     

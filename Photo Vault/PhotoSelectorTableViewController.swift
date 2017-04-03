@@ -41,6 +41,10 @@ class PhotoSelectorTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override var prefersStatusBarHidden: Bool {
+        return false
+    }
 
     // MARK: - Table view data source
 
