@@ -10,11 +10,19 @@ import UIKit
 
 class PhotoSelectorCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var checkMark: SSCheckMark!
     
     override var isSelected: Bool {
         didSet {
-            self.layer.borderWidth = 3.0
-            self.layer.borderColor = isSelected ? UIColor.blue.cgColor : UIColor.clear.cgColor
+            checkMark.backgroundColor = UIColor.clear
+            if isSelected == true{
+                checkMark.checked = true
+                checkMark.isHidden = false
+            }
+            else{
+                checkMark.checked = false
+                checkMark.isHidden = true
+            }
         }
     }
 }

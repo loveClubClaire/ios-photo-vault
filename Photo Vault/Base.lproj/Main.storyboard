@@ -88,6 +88,11 @@
                                             <rect key="frame" x="0.0" y="0.0" width="103" height="103"/>
                                             <gestureRecognizers/>
                                         </imageView>
+                                        <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9ph-Qx-q8g" customClass="SSCheckMark" customModule="Photo_Vault" customModuleProvider="target">
+                                            <rect key="frame" x="68" y="68" width="35" height="35"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
                                     </subviews>
                                 </view>
                                 <constraints>
@@ -97,6 +102,7 @@
                                     <constraint firstAttribute="trailing" secondItem="CO7-mY-l3R" secondAttribute="trailing" id="w30-ZK-jkZ"/>
                                 </constraints>
                                 <connections>
+                                    <outlet property="checkMark" destination="9ph-Qx-q8g" id="eoy-Hy-HCO"/>
                                     <outlet property="imageView" destination="CO7-mY-l3R" id="uX5-iT-8Wd"/>
                                 </connections>
                             </collectionViewCell>
@@ -220,6 +226,11 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="C7X-Ha-NU7">
                                             <rect key="frame" x="0.0" y="0.0" width="103" height="103"/>
                                         </imageView>
+                                        <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hHC-tQ-c4C" customClass="SSCheckMark" customModule="Photo_Vault" customModuleProvider="target">
+                                            <rect key="frame" x="68" y="68" width="35" height="35"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
                                     </subviews>
                                 </view>
                                 <constraints>
@@ -229,6 +240,7 @@
                                     <constraint firstItem="C7X-Ha-NU7" firstAttribute="leading" secondItem="2b9-Nw-PVs" secondAttribute="leading" id="ynN-Wz-nUJ"/>
                                 </constraints>
                                 <connections>
+                                    <outlet property="checkMark" destination="hHC-tQ-c4C" id="zhf-TB-vWW"/>
                                     <outlet property="imageView" destination="C7X-Ha-NU7" id="1M3-wX-YIR"/>
                                 </connections>
                             </collectionViewCell>

@@ -27,6 +27,7 @@
 		C080F0131E64BF6F0072C55F /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F0121E64BF6F0072C55F /* Array+Extension.swift */; };
 		C0B335451E8D916200D4091D /* CustomUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B335441E8D916200D4091D /* CustomUIButton.swift */; };
 		C0B335471E8D9AA500D4091D /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B335461E8D9AA500D4091D /* DetailViewController.swift */; };
+		C0B3354B1E93079400D4091D /* SSCheckMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B3354A1E93079400D4091D /* SSCheckMark.swift */; };
 		C0DCCB681E84C4FE006D1984 /* AddToAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DCCB671E84C4FE006D1984 /* AddToAlbumTableViewController.swift */; };
 		F787C2B769AA311D8A716E37 /* Pods_Photo_VaultTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B27D5E62667323BD8A2EF90 /* Pods_Photo_VaultTests.framework */; };
 /* End PBXBuildFile section */
@@ -70,6 +71,7 @@
 		C080F0121E64BF6F0072C55F /* Array+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Array+Extension.swift"; path = "../Array+Extension.swift"; sourceTree = "<group>"; };
 		C0B335441E8D916200D4091D /* CustomUIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomUIButton.swift; sourceTree = "<group>"; };
 		C0B335461E8D9AA500D4091D /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		C0B3354A1E93079400D4091D /* SSCheckMark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSCheckMark.swift; sourceTree = "<group>"; };
 		C0DCCB671E84C4FE006D1984 /* AddToAlbumTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddToAlbumTableViewController.swift; sourceTree = "<group>"; };
 		FE2187A6F30C87095893D8D9 /* Pods-Photo VaultTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photo VaultTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photo VaultTests/Pods-Photo VaultTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -138,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				C080EFDA1E5EA5590072C55F /* AppDelegate.swift */,
+				C0B3354A1E93079400D4091D /* SSCheckMark.swift */,
 				C04BECB81E83512F006C858D /* BackArrow.png */,
 				C080F0061E63999E0072C55F /* Photo Selector */,
 				C080EFFC1E5F8DFF0072C55F /* TableViewControllers */,
@@ -417,6 +420,7 @@
 				C0B335451E8D916200D4091D /* CustomUIButton.swift in Sources */,
 				C0DCCB681E84C4FE006D1984 /* AddToAlbumTableViewController.swift in Sources */,
 				C080F00E1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift in Sources */,
+				C0B3354B1E93079400D4091D /* SSCheckMark.swift in Sources */,
 				C080F0011E5F8E790072C55F /* AlbumTableViewCell.swift in Sources */,
 				C0B335471E8D9AA500D4091D /* DetailViewController.swift in Sources */,
 				C080F0031E5F94D80072C55F /* PhotosCollectionViewController.swift in Sources */,
