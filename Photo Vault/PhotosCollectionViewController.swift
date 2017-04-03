@@ -57,6 +57,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             }
         }
         loadImages()
+        //Allow multiple images to be selected
+        self.collectionView?.allowsMultipleSelection = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -342,6 +344,14 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     let docController = UIDocumentInteractionController()
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        //Check to see if we're tapping an image or selecting images. If we're selecting images, this function does nothing
+        if isSelecting == false{
+        //Get all the selected items and unselect them
+            //This function is called when an item is selected. But in this instance, the user is tapping an image to display it fully, not selecting images. By deselecting the image immediately after it's selected, the cell's UI does not update to indicate it's selected. Nor are multiple cells already selected when a user goes to select images
+        let selectedItems = self.collectionView?.indexPathsForSelectedItems
+        for indexPath in selectedItems!{
+            self.collectionView?.deselectItem(at: indexPath, animated: false)
+        }
         //Get the portrait width of the iOS device
         let pointWidth = UIScreen.main.nativeBounds.height / UIScreen.main.nativeScale
         //Define the colorspace and the color for the header and footer border
@@ -490,38 +500,6 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         
         self.presentImageGallery(galleryViewController)
     }
-    
-    
-    
-    func commentWrap(){
-        /*
-         // Uncomment this method to specify if the specified item should be highlighted during tracking
-         override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-         return true
-         }
-         */
-        
-        /*
-         // Uncomment this method to specify if the specified item should be selected
-         override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-         return true
-         }
-         */
-        
-        /*
-         // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-         override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-         return false
-         }
-         
-         override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-         return false
-         }
-         
-         override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-         
-         }
-         */
     }
     
     //MARK: - Gallery Configuration
@@ -634,6 +612,104 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         return currentViewController!
     }
 
+    // MARK: Actions
+    var isSelecting = false
+    @IBAction func selectButtonPressed(_ sender: UIBarButtonItem) {
+        let backButton = self.navigationItem.leftBarButtonItem
+        let title = self.navigationItem.title
+        let rightButtons = self.navigationItem.rightBarButtonItems
+        
+        isSelecting = true
+        
+        //self.tabBarController?.tabBar.isHidden = true
+        self.navigationController?.isToolbarHidden = false
+        let emptyBackButton = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.plain, target: navigationController, action: nil)
+        self.navigationItem.leftBarButtonItem = emptyBackButton
+        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonPressed))
+        cancelButton.style = .done
+        self.navigationItem.rightBarButtonItems = [cancelButton]
+        self.navigationItem.title = "Select Items"
+        
+        
+        let footerItems = [
+            UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(exportButtonPressed)),
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
+            UIBarButtonItem(title: "Add To", style: .plain, target: self, action: #selector(addButtonPressed)),
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil),
+            UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(trashButtonPressed))]
+        self.navigationController?.toolbar.items = footerItems
+        
+        cancelButtonClosure = {
+            self.navigationItem.leftBarButtonItem = backButton
+            self.navigationItem.title = title
+            self.navigationItem.rightBarButtonItems = rightButtons
+        }
+        
+        trashButtonClosure = {
+            let selectedItems = self.collectionView?.indexPathsForSelectedItems
+            if (selectedItems?.count)! > 0 {
+                let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                var title = "Delete \(selectedItems!.count) Photos"
+                if selectedItems?.count == 1{ title = "Delete Photo" }
+                let destroyAction = UIAlertAction(title: title, style: .destructive, handler: {(action : UIAlertAction!) -> Void in
+                    let sortedSelectedItems = selectedItems?.sorted{$0.row > $1.row}
+                    for indexPath in sortedSelectedItems!{
+                        let index = indexPath.row
+                        self.images.remove(at: index)
+                        self.deleteImages([index])
+                        self.collectionView?.reloadData()
+                        self.cancelButtonPressed()
+                    }
+                })
+                alertController.addAction(cancelAction)
+                alertController.addAction(destroyAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
+        }
+        
+        addButtonClosure = {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let secondViewController = storyboard.instantiateViewController(withIdentifier: "addToAlbumView")  as! AddToAlbumTableViewController
+            secondViewController.originAlbum = self.albumName
+            var newIndexSet = IndexSet()
+            for indexPath in (self.collectionView?.indexPathsForSelectedItems)!{
+                newIndexSet.insert(indexPath.row)
+            }
+            secondViewController.selectedPhotos = newIndexSet
+            let navController = UINavigationController(rootViewController: secondViewController)
+            self.present(navController, animated: true, completion: nil)
+            self.cancelButtonPressed()
+        }
+
+        exportButtonClosure = {
+            let selectedItems = self.collectionView?.indexPathsForSelectedItems
+            var images = [UIImage]()
+            for indexPath in selectedItems!{
+                let data = FileManager.default.contents(atPath: self.imagesDirectoryPath + "/" + self.imageFileNames[indexPath.row])
+                let image = UIImage(data: data!)
+                images.append(image!)
+            }
+            let activityViewController = UIActivityViewController(activityItems: images, applicationActivities: nil)
+            self.present(activityViewController, animated: true, completion: nil)
+            self.cancelButtonPressed()
+        }
+
+
+    }
+    
+    var cancelButtonClosure: (() -> Void) = {}
+    func cancelButtonPressed(){
+        cancelButtonClosure()
+        let selectedItems = self.collectionView?.indexPathsForSelectedItems
+        for indexPath in selectedItems!{
+            self.collectionView?.deselectItem(at: indexPath, animated: false)
+        }
+        self.navigationController?.isToolbarHidden = true
+        isSelecting = false
+    }
+
+    
 }
 
 
