@@ -57,6 +57,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             }
         }
         loadImages()
+        //Set the navigation bar title
+        self.navigationItem.title = albumName
         //Allow multiple images to be selected
         self.collectionView?.allowsMultipleSelection = true
     }

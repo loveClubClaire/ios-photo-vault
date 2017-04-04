@@ -21,15 +21,28 @@ class PhotoSelectorTableViewController: UITableViewController {
         var thumbnail:UIImage
         var photoCount: Int
     }
+    @IBOutlet var errorView: UIView!
+
     
     var photosCollectionViewController: PhotosCollectionViewController?
     var photoAlbums = [photoAlbum]()
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        photoAlbums = fetchAlbums()
-        
+        //Get the current authorization state.
+        let status = PHPhotoLibrary.authorizationStatus()
+        //// Access has not been determined.Access has been granted.
+        if (status == PHAuthorizationStatus.authorized) {
+            photoAlbums = fetchAlbums()
+        }
+        //// Access has not been determined.Access has been denied.
+        else if (status == PHAuthorizationStatus.denied) {
+            errorView.frame = CGRect(x: 0, y: 65, width: self.view.frame.width, height: self.view.frame.height)
+            errorView.autoresizingMask = [.flexibleWidth,.flexibleHeight]
+            self.navigationController?.view.addSubview(errorView)
+        }
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -132,6 +145,11 @@ class PhotoSelectorTableViewController: UITableViewController {
         }
     }
     
+    @IBAction func enablePhotoLibrary(_ sender: UIButton) {
+        if let appSettings = NSURL(string: UIApplicationOpenSettingsURLString) {
+            UIApplication.shared.open(appSettings as URL, options: [:], completionHandler: nil)
+        }
+    }
     
     @IBAction func cancel(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
