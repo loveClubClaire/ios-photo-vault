@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os.log
 
 class AlbumTableViewController: UITableViewController {
 
@@ -65,13 +66,35 @@ class AlbumTableViewController: UITableViewController {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Delete the row from the data source
-            albums.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            UserDefaults.standard.set(albums, forKey: "masterKey")
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+            let alertController = UIAlertController(title: "Delete Album?", message: "The photos within the album will be deleted", preferredStyle: .alert)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            let destroyAction = UIAlertAction(title: "Delete", style: .destructive, handler: {(action : UIAlertAction!) -> Void in
+                // Remove the images from the applciation
+                let documentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.path
+                let imagesDirectoryPath = documentsDirectory.appending("/Photos")
+                let imageFileNames = (NSKeyedUnarchiver.unarchiveObject(withFile: imagesDirectoryPath.appending("/\(self.albums[indexPath.row])_albumPictures")) as? [String]) ?? []
+                for imagePath in imageFileNames {
+                    let thumbnailPath = imagePath.components(separatedBy: ".")[0] + "thumbnail.jpg"
+                    do {
+                        try FileManager.default.removeItem(atPath: imagesDirectoryPath.appending("/\(thumbnailPath)"))
+                        try FileManager.default.removeItem(atPath: imagesDirectoryPath.appending("/\(imagePath)"))
+                    }
+                    catch{
+                        os_log("Failed to delete image & thumbnail...", log: OSLog.default, type: .error)
+                    }
+                }
+                if imageFileNames != []{
+                    try! FileManager.default.removeItem(atPath: imagesDirectoryPath.appending("/\(self.albums[indexPath.row])_albumPictures"))
+                }
+                // Delete the row from the data source
+                self.albums.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .fade)
+                UserDefaults.standard.set(self.albums, forKey: "masterKey")
+            })
+            alertController.addAction(cancelAction)
+            alertController.addAction(destroyAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     
 
