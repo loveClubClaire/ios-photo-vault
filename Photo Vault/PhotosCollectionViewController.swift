@@ -361,7 +361,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         let color : CGColor = CGColor(colorSpace: space, components: [0.0, 0.0, 0.0, 0.3])!
         //Create the header and footer frames and views. The header and footer get their height from the navigation bar and the tab bar respectively. The header height is actually the navigation bar height plus the height of the status bar frame because if that's not accounted for, the view will just overlap the status bar.
         let headerFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: ((self.navigationController?.navigationBar.frame.height)! + UIApplication.shared.statusBarFrame.height))
-        let footerFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: (self.tabBarController?.tabBar.frame.height)!)
+        let footerFrame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 49)
         let headerView = UIView.init(frame: headerFrame)
         let footerView = UIView.init(frame: footerFrame)
         //What we do next is set the header views color, create a white view, and a border layer. Layering these three objects on top of each other give us the same appearance as a standard iOS navigation bar or tab bar. We do the same thing for the footer. We use the values we use because that's apparently what Apple uses. See http://stackoverflow.com/a/30154915/3594256 for more detail

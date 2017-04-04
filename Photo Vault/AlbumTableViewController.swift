@@ -14,9 +14,8 @@ class AlbumTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        albums = ["Hello","World"]
-        
+        albums = UserDefaults.standard.array(forKey: "masterKey") as? [String] ?? []
+        self.navigationItem.title = "Albums"
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -69,6 +68,7 @@ class AlbumTableViewController: UITableViewController {
             // Delete the row from the data source
             albums.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            UserDefaults.standard.set(albums, forKey: "masterKey")
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
@@ -81,6 +81,7 @@ class AlbumTableViewController: UITableViewController {
         let movingItem = albums[fromIndexPath.row]
         albums.remove(at: fromIndexPath.row)
         albums.insert(movingItem, at: to.row)
+        UserDefaults.standard.set(albums, forKey: "masterKey")
     }
     
 
@@ -127,6 +128,7 @@ class AlbumTableViewController: UITableViewController {
         
         alertController.addTextField { (textField : UITextField!) -> Void in
             textField.placeholder = "Title"
+            textField.autocapitalizationType = .sentences
             textField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: .editingChanged)
 
         }
@@ -140,6 +142,7 @@ class AlbumTableViewController: UITableViewController {
             alert -> Void in
             let firstTextField = alertController.textFields![0] as UITextField
             self.albums.append(firstTextField.text!)
+            UserDefaults.standard.set(self.albums, forKey: "masterKey")
             self.tableView.reloadData()
         })
         

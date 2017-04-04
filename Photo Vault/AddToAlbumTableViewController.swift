@@ -17,8 +17,7 @@ class AddToAlbumTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        albums = ["Hello","World"]
+        albums = UserDefaults.standard.array(forKey: "masterKey") as? [String] ?? []
     }
 
     override func didReceiveMemoryWarning() {

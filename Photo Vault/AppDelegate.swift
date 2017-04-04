@@ -23,14 +23,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if (status == PHAuthorizationStatus.notDetermined) {
             _ = [PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: PHFetchOptions())]
         }
-        
-        
         return true
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+        application.ignoreSnapshotOnNextApplicationLaunch()
+        
+        let colorView = UIView(frame: (self.window?.frame)!)
+        colorView.tag = 9999
+        colorView.backgroundColor = UIColor.black
+        self.window?.addSubview(colorView)
+        self.window?.bringSubview(toFront: colorView)
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -44,6 +49,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        let colorView = self.window?.viewWithTag(9999)
+        colorView?.removeFromSuperview()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
