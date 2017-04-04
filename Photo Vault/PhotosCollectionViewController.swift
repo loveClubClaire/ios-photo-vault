@@ -35,6 +35,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     var albumName: String?
     var imagesDirectoryPath: String!
     
+    let numJunkBytes = 50
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -197,7 +199,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
                         //Convert the image to data (currently only supporting JPEG, may increase support as time goes on)
                         let image = image
                         let imagePath = self.imagesDirectoryPath.appending("/\(title)")
-                        let data = UIImageJPEGRepresentation(image!, 1.0)
+                        var data = UIImageJPEGRepresentation(image!, 1.0)
+                        data?.addJunkHeader()
                         //Save the image to disk
                         let success = FileManager.default.createFile(atPath: imagePath, contents: data, attributes: nil)
                         if success == false {
@@ -206,7 +209,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
                         //Resize the image to thumbnail size and quality (do this so we have small images to load into the collection view cells. Small images == less data to load from disk == smaller loading times)
                         let thumbnail = self.resizeToThumbnail(image: image!)
                         let thumbnailPath = self.imagesDirectoryPath.appending("/\(title.components(separatedBy: ".")[0])thumbnail.jpg")
-                        let thumbnaildata = UIImageJPEGRepresentation(thumbnail, 1.0)
+                        var thumbnaildata = UIImageJPEGRepresentation(thumbnail, 1.0)
+                        thumbnaildata?.addJunkHeader()
                         //Save the thumbnail to disk
                         let secondSuccess = FileManager.default.createFile(atPath: thumbnailPath, contents: thumbnaildata, attributes: nil)
                         if secondSuccess == false {
@@ -216,7 +220,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
                         //Store a custom fetch image function in a variable
                         let myFetchImageBlock: FetchImageBlock = {
                             //When called, this function loads the selected full quality image into memory
-                            let fetchedData = FileManager.default.contents(atPath: imagePath)
+                            var fetchedData = FileManager.default.contents(atPath: imagePath)
+                            fetchedData?.removeJunkHeader()
                             let fetchedImage = UIImage(data: fetchedData!)
                             $0(fetchedImage)
                         }
@@ -269,12 +274,14 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         for imagePath in imageFileNames{
             //Generate a path to the thumbnail image and load it from disk into memory
             let thumbnailPath = imagePath.components(separatedBy: ".")[0] + "thumbnail.jpg"
-            let data = FileManager.default.contents(atPath: imagesDirectoryPath.appending("/\(thumbnailPath)"))
+            var data = FileManager.default.contents(atPath: imagesDirectoryPath.appending("/\(thumbnailPath)"))
+            data?.removeJunkHeader()
             let image = UIImage(data: data!)
             //Store a custom fetch image function in a variable
             let myFetchImageBlock: FetchImageBlock = {
                 //When called, this function loads the selected full quality image into memory
-                let fetchedData = FileManager.default.contents(atPath: self.imagesDirectoryPath.appending("/\(imagePath)"))
+                var fetchedData = FileManager.default.contents(atPath: self.imagesDirectoryPath.appending("/\(imagePath)"))
+                fetchedData?.removeJunkHeader()
                 let fetchedImage = UIImage(data: fetchedData!)
                 $0(fetchedImage)
             }
@@ -490,10 +497,11 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         
         exportButtonClosure = {
             let index = Int((countLabel.text?.components(separatedBy: " of ")[0])!)! - 1
-            self.docController.url = URL.init(fileURLWithPath: (self.imagesDirectoryPath + "/" + self.imageFileNames[index]))
-            self.currentViewController = galleryViewController
-            self.docController.delegate = self
-            self.docController.presentOptionsMenu(from: galleryViewController.view.frame, in: galleryViewController.view, animated: true)
+            var data = FileManager.default.contents(atPath: self.imagesDirectoryPath + "/" + self.imageFileNames[index])
+            data?.removeJunkHeader()
+            let images = [UIImage(data: data!)]
+            let activityViewController = UIActivityViewController(activityItems: images, applicationActivities: nil)
+            galleryViewController.present(activityViewController, animated: true, completion: nil)
         }
         
         galleryViewController.swipedToDismissCompletion = {self.showStatusBar = true}
@@ -596,7 +604,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         selectedCell = indexPath
         //Instantiate the view peek view controller, fetch the image data from disk, and then set the loaded image as the view contorllers image
         guard let detailVC = storyboard?.instantiateViewController(withIdentifier: "DetailViewController") as? DetailViewController else { return nil }
-        let fetchedData = FileManager.default.contents(atPath: self.imagesDirectoryPath.appending("/\(imageFileNames[indexPath.row])"))
+        var fetchedData = FileManager.default.contents(atPath: self.imagesDirectoryPath.appending("/\(imageFileNames[indexPath.row])"))
+        fetchedData?.removeJunkHeader()
         let fetchedImage = UIImage(data: fetchedData!)
         detailVC.photo = fetchedImage
         //Return the peek view controller
@@ -688,7 +697,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             let selectedItems = self.collectionView?.indexPathsForSelectedItems
             var images = [UIImage]()
             for indexPath in selectedItems!{
-                let data = FileManager.default.contents(atPath: self.imagesDirectoryPath + "/" + self.imageFileNames[indexPath.row])
+                var data = FileManager.default.contents(atPath: self.imagesDirectoryPath + "/" + self.imageFileNames[indexPath.row])
+                data?.removeJunkHeader()
                 let image = UIImage(data: data!)
                 images.append(image!)
             }

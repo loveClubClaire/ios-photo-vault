@@ -28,6 +28,7 @@
 		C0B335451E8D916200D4091D /* CustomUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B335441E8D916200D4091D /* CustomUIButton.swift */; };
 		C0B335471E8D9AA500D4091D /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B335461E8D9AA500D4091D /* DetailViewController.swift */; };
 		C0B3354B1E93079400D4091D /* SSCheckMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B3354A1E93079400D4091D /* SSCheckMark.swift */; };
+		C0B3354D1E93392800D4091D /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B3354C1E93392800D4091D /* Data+Extension.swift */; };
 		C0DCCB681E84C4FE006D1984 /* AddToAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DCCB671E84C4FE006D1984 /* AddToAlbumTableViewController.swift */; };
 		F787C2B769AA311D8A716E37 /* Pods_Photo_VaultTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B27D5E62667323BD8A2EF90 /* Pods_Photo_VaultTests.framework */; };
 /* End PBXBuildFile section */
@@ -72,6 +73,7 @@
 		C0B335441E8D916200D4091D /* CustomUIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomUIButton.swift; sourceTree = "<group>"; };
 		C0B335461E8D9AA500D4091D /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		C0B3354A1E93079400D4091D /* SSCheckMark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSCheckMark.swift; sourceTree = "<group>"; };
+		C0B3354C1E93392800D4091D /* Data+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
 		C0DCCB671E84C4FE006D1984 /* AddToAlbumTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddToAlbumTableViewController.swift; sourceTree = "<group>"; };
 		FE2187A6F30C87095893D8D9 /* Pods-Photo VaultTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photo VaultTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photo VaultTests/Pods-Photo VaultTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -200,6 +202,7 @@
 				C0B335441E8D916200D4091D /* CustomUIButton.swift */,
 				C04BECB11E81C255006C858D /* CustomNavigationBar.swift */,
 				C04BECB41E8312EC006C858D /* UIImage+Extension.swift */,
+				C0B3354C1E93392800D4091D /* Data+Extension.swift */,
 				C080F0121E64BF6F0072C55F /* Array+Extension.swift */,
 			);
 			name = Extensions;
@@ -410,6 +413,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C04BECB21E81C255006C858D /* CustomNavigationBar.swift in Sources */,
+				C0B3354D1E93392800D4091D /* Data+Extension.swift in Sources */,
 				C080EFDB1E5EA5590072C55F /* AppDelegate.swift in Sources */,
 				C080F0131E64BF6F0072C55F /* Array+Extension.swift in Sources */,
 				C04BECB51E8312EC006C858D /* UIImage+Extension.swift in Sources */,
