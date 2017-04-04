@@ -9,6 +9,7 @@
 import UIKit
 import Photos
 import LocalAuthentication
+import os.log
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -97,7 +98,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 //self.statusLabel.text = "User wants to use a password"
             case LAError.Code.touchIDNotEnrolled.rawValue:
                 print("TouchID not enrolled")
-                //self.statusLabel.text = "TouchID not enrolled"
+                let alertController = UIAlertController(title: "TouchID not enrolled", message: "Photo Vault requires TouchID to be enabled", preferredStyle: .alert)
+                let cancelAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                alertController.addAction(cancelAction)
+                UIApplication.shared.keyWindow?.rootViewController?.present(alertController, animated: true, completion: nil)
+
             case LAError.Code.passcodeNotSet.rawValue:
                 print("Passcode not set")
                 //self.statusLabel.text = "Passcode not set"
