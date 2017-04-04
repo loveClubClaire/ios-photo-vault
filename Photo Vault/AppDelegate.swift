@@ -8,14 +8,17 @@
 
 import UIKit
 import Photos
+import LocalAuthentication
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var authenticated = false
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        authenticateUser()
         //If photo library authorization has not been determined, attempt to access the photo library on app launch to trigger the user notification
         //Get the current authorization state.
         let status = PHPhotoLibrary.authorizationStatus()
@@ -29,13 +32,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+        authenticated = false
         application.ignoreSnapshotOnNextApplicationLaunch()
-        
-        let colorView = UIView(frame: (self.window?.frame)!)
-        colorView.tag = 9999
-        colorView.backgroundColor = UIColor.black
-        self.window?.addSubview(colorView)
-        self.window?.bringSubview(toFront: colorView)
+        if UIApplication.shared.keyWindow?.rootViewController?.restorationIdentifier == "AlbumTableViewNavigation"{
+            let colorView = UIImageView(frame: (self.window?.frame)!)
+            colorView.tag = 999
+            colorView.backgroundColor = UIColor.black
+            colorView.image = #imageLiteral(resourceName: "PhotoVaultSolidBlack.png")
+            colorView.contentMode = .scaleAspectFit
+            colorView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
+            self.window?.addSubview(colorView)
+            self.window?.bringSubview(toFront: colorView)
+        }
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -49,12 +57,58 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        let colorView = self.window?.viewWithTag(9999)
-        colorView?.removeFromSuperview()
+        if authenticated == false{
+            authenticateUser()
+        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+    
+    func authenticateUser() {
+        let touchIDManager = PITouchIDManager()
+        
+        touchIDManager.authenticateUser(success: { () -> () in
+            OperationQueue.main.addOperation({ () -> Void in
+                self.authenticated = true
+                let colorView = self.window?.viewWithTag(999)
+                colorView?.removeFromSuperview()
+                if UIApplication.shared.keyWindow?.rootViewController?.restorationIdentifier != "AlbumTableViewNavigation"{
+                    let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                    let viewController = mainStoryboard.instantiateViewController(withIdentifier: "AlbumTableViewNavigation")
+                    UIApplication.shared.keyWindow?.rootViewController = viewController
+                }
+                else{
+                    let colorView = self.window?.viewWithTag(999)
+                    colorView?.removeFromSuperview()
+                }
+            })
+        }, failure: { (evaluationError: NSError) -> () in
+            switch evaluationError.code {
+            case LAError.Code.systemCancel.rawValue:
+                print("Authentication cancelled by the system")
+                //self.statusLabel.text = "Authentication cancelled by the system"
+            case LAError.Code.userCancel.rawValue:
+                print("Authentication cancelled by the user")
+                //self.statusLabel.text = "Authentication cancelled by the user"
+            case LAError.Code.userFallback.rawValue:
+                print("User wants to use a password")
+                //self.statusLabel.text = "User wants to use a password"
+            case LAError.Code.touchIDNotEnrolled.rawValue:
+                print("TouchID not enrolled")
+                //self.statusLabel.text = "TouchID not enrolled"
+            case LAError.Code.passcodeNotSet.rawValue:
+                print("Passcode not set")
+                //self.statusLabel.text = "Passcode not set"
+            default:
+                print("Authentication failed")
+                //self.statusLabel.text = "Authentication failed"
+                OperationQueue.main.addOperation({ () -> Void in
+                    //self.showPasswordAlert()
+                })
+            }
+        })
     }
 
 
