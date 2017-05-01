@@ -429,7 +429,7 @@
         <!--Navigation Controller-->
         <scene sceneID="wmd-Yg-K5I">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jbN-WT-yvU" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="AddToAlbumNavigationController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="jbN-WT-yvU" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="brH-l8-AJn">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>

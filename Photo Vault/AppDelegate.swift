@@ -89,28 +89,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             switch evaluationError.code {
             case LAError.Code.systemCancel.rawValue:
                 print("Authentication cancelled by the system")
-                //self.statusLabel.text = "Authentication cancelled by the system"
             case LAError.Code.userCancel.rawValue:
                 print("Authentication cancelled by the user")
-                //self.statusLabel.text = "Authentication cancelled by the user"
             case LAError.Code.userFallback.rawValue:
                 print("User wants to use a password")
-                //self.statusLabel.text = "User wants to use a password"
             case LAError.Code.touchIDNotEnrolled.rawValue:
                 print("TouchID not enrolled")
                 let alertController = UIAlertController(title: "TouchID not enrolled", message: "Photo Vault requires TouchID to be enabled", preferredStyle: .alert)
                 let cancelAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
                 alertController.addAction(cancelAction)
                 UIApplication.shared.keyWindow?.rootViewController?.present(alertController, animated: true, completion: nil)
-
             case LAError.Code.passcodeNotSet.rawValue:
                 print("Passcode not set")
-                //self.statusLabel.text = "Passcode not set"
             default:
                 print("Authentication failed")
-                //self.statusLabel.text = "Authentication failed"
                 OperationQueue.main.addOperation({ () -> Void in
-                    //self.showPasswordAlert()
                 })
             }
         })

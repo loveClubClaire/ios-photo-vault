@@ -78,6 +78,7 @@
 		C0B3354E1E93403400D4091D /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		C0B335541E9340BB00D4091D /* PITouchIDManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PITouchIDManager.swift; sourceTree = "<group>"; };
 		C0CC36B61E937057008A7922 /* PhotoVaultSolidBlack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PhotoVaultSolidBlack.png; sourceTree = "<group>"; };
+		C0CC36B81E937828008A7922 /* Photo Vault.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Photo Vault.entitlements"; sourceTree = "<group>"; };
 		C0DCCB671E84C4FE006D1984 /* AddToAlbumTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddToAlbumTableViewController.swift; sourceTree = "<group>"; };
 		FE2187A6F30C87095893D8D9 /* Pods-Photo VaultTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Photo VaultTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Photo VaultTests/Pods-Photo VaultTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -147,10 +148,10 @@
 		C080EFD91E5EA5590072C55F /* Photo Vault */ = {
 			isa = PBXGroup;
 			children = (
+				C0CC36B81E937828008A7922 /* Photo Vault.entitlements */,
 				C080EFDA1E5EA5590072C55F /* AppDelegate.swift */,
 				C0B335541E9340BB00D4091D /* PITouchIDManager.swift */,
 				C0B3354A1E93079400D4091D /* SSCheckMark.swift */,
-				C04BECB81E83512F006C858D /* BackArrow.png */,
 				C080F0061E63999E0072C55F /* Photo Selector */,
 				C080EFFC1E5F8DFF0072C55F /* TableViewControllers */,
 				C080EFFD1E5F8E0F0072C55F /* TableViewCells */,
@@ -158,6 +159,7 @@
 				C080EFE01E5EA5590072C55F /* Main.storyboard */,
 				C080EFE31E5EA5590072C55F /* Assets.xcassets */,
 				C0CC36B61E937057008A7922 /* PhotoVaultSolidBlack.png */,
+				C04BECB81E83512F006C858D /* BackArrow.png */,
 				C080EFE81E5EA5590072C55F /* Info.plist */,
 			);
 			path = "Photo Vault";
@@ -273,6 +275,11 @@
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = P87XK5R228;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.DataProtection = {
+								enabled = 1;
+							};
+						};
 					};
 					C080EFEC1E5EA5590072C55F = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -568,6 +575,7 @@
 			baseConfigurationReference = B30D136DEAB35101EEC7A8B0 /* Pods-Photo Vault.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Photo Vault/Photo Vault.entitlements";
 				DEVELOPMENT_TEAM = P87XK5R228;
 				INFOPLIST_FILE = "Photo Vault/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
@@ -583,6 +591,7 @@
 			baseConfigurationReference = 0C5EEE2295C73382891817B5 /* Pods-Photo Vault.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Photo Vault/Photo Vault.entitlements";
 				DEVELOPMENT_TEAM = P87XK5R228;
 				INFOPLIST_FILE = "Photo Vault/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;

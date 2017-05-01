@@ -23,5 +23,4 @@ class CustomNavigationBar: UINavigationBar {
             return CGSize(width: UIScreen.main.bounds.width, height: defaultHeight!)
         }
     }
-
 }

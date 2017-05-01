@@ -53,16 +53,6 @@ class AlbumTableViewController: UITableViewController {
         return cell
     }
     
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
@@ -107,18 +97,13 @@ class AlbumTableViewController: UITableViewController {
         UserDefaults.standard.set(albums, forKey: "masterKey")
     }
     
-
-    
     // Override to support conditional rearranging of the table view.
     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the item to be re-orderable.
         return true
     }
-    
 
-    
     // MARK: - Navigation
-    
     
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -140,8 +125,6 @@ class AlbumTableViewController: UITableViewController {
             fatalError("Unexpected Segue Identifier; \(segue.identifier)")
         }
     }
-    
-    
     
     // MARK: - Actions
     var saveButton: UIAlertAction? = nil
@@ -171,15 +154,9 @@ class AlbumTableViewController: UITableViewController {
         
         alertController.addAction(cancelAction)
         alertController.addAction(saveAction)
-        
-
-        
         alertController.actions[1].isEnabled = false
         saveButton = alertController.actions[1]
         self.present(alertController, animated: true, completion: nil)
-        
-        
-        
     }
     
     func textFieldDidChange(_ textField: UITextField) {
@@ -195,7 +172,4 @@ class AlbumTableViewController: UITableViewController {
     override var prefersStatusBarHidden: Bool {
         return false
     }
-
-
-
 }
