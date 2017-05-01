@@ -191,24 +191,14 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
                         (image, info) -> Void in
                         //Create a file name for the image
                         //If file name exists for some reason, make a new one don't overwrite the file
-                        var title = String(arc4random()) + ".jpg"
+                        var title = String(arc4random())
                         while self.imageFileNames.contains(title) {
-                            title = String(arc4random()) + ".jpg"
-                        }
-                        self.imageFileNames.append(title)
-                        //Convert the image to data (currently only supporting JPEG, may increase support as time goes on)
-                        let image = image
-                        let imagePath = self.imagesDirectoryPath.appending("/\(title)")
-                        var data = UIImageJPEGRepresentation(image!, 1.0)
-                        data?.addJunkHeader()
-                        //Save the image to disk
-                        let success = FileManager.default.createFile(atPath: imagePath, contents: data, attributes: nil)
-                        if success == false {
-                            os_log("Failed to save image...", log: OSLog.default, type: .error)
+                            title = String(arc4random())
                         }
                         //Resize the image to thumbnail size and quality (do this so we have small images to load into the collection view cells. Small images == less data to load from disk == smaller loading times)
+                        let image = image
                         let thumbnail = self.resizeToThumbnail(image: image!)
-                        let thumbnailPath = self.imagesDirectoryPath.appending("/\(title.components(separatedBy: ".")[0])thumbnail.jpg")
+                        let thumbnailPath = self.imagesDirectoryPath.appending("/\(title)thumbnail.jpg")
                         var thumbnaildata = UIImageJPEGRepresentation(thumbnail, 1.0)
                         thumbnaildata?.addJunkHeader()
                         //Save the thumbnail to disk
@@ -216,24 +206,81 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
                         if secondSuccess == false {
                             os_log("Failed to save thumbnail...", log: OSLog.default, type: .error)
                         }
-                        
-                        //Store a custom fetch image function in a variable
-                        let myFetchImageBlock: FetchImageBlock = {
-                            //When called, this function loads the selected full quality image into memory
-                            var fetchedData = FileManager.default.contents(atPath: imagePath)
-                            fetchedData?.removeJunkHeader()
-                            let fetchedImage = UIImage(data: fetchedData!)
-                            $0(fetchedImage)
+                        //If our 'image' is actually a video file, make it so the video plays
+                        if asset.mediaType == .video{
+                            //Save the video image to display en the video hasn't been started
+                            let imagePath = self.imagesDirectoryPath.appending("/\(title + ".jpg")")
+                            var data = UIImageJPEGRepresentation(image!, 1.0)
+                            data?.addJunkHeader()
+                            //Save the image to disk
+                            let success = FileManager.default.createFile(atPath: imagePath, contents: data, attributes: nil)
+                            if success == false {
+                                os_log("Failed to save image...", log: OSLog.default, type: .error)
+                            }
+                            //Add the proper file extension to the filename
+                            title = title + ".mp4"
+                            self.imageFileNames.append(title)
+                            //Acquire the video file
+                            let videoDispatchGroup = DispatchGroup()
+                            videoDispatchGroup.enter()
+                            imageManager.requestAVAsset(forVideo: asset, options: nil, resultHandler: { (avasset, audio, info) in
+                                let videoPath = self.imagesDirectoryPath.appending("/\(title)")
+                                if let avassetURL = avasset as? AVURLAsset {
+                                    guard let videoData = try? Data(contentsOf: avassetURL.url) else {
+                                        return
+                                    }
+                                    //Convert the image to data (currently only supporting JPEG, may increase support as time goes on)
+                                    //let data = videoData
+                                    //data?.addJunkHeader()
+                                    //Save the image to disk
+                                    let success = FileManager.default.createFile(atPath: videoPath, contents: videoData, attributes: nil)
+                                    if success == false {
+                                        os_log("Failed to save videoFile...", log: OSLog.default, type: .error)
+                                    }
+                                }
+                                //Create a new gallery item containing the two custom functions defined above.
+                                let galleryItem = GalleryItem.video(fetchPreviewImageBlock:{$0(image)}, videoURL: URL (fileURLWithPath: videoPath))
+                                //Add the thumbnail images and it's corresponding galleryItem to our imageArray as a new Image object
+                                self.images.append(Image.init(thumbnail: thumbnail, galleryItem: galleryItem))
+                                videoDispatchGroup.leave()
+                            })
+                            videoDispatchGroup.wait()
                         }
-                        
-                        let itemViewControllerBlock: ItemViewControllerBlock = { index, itemCount, fetchImageBlock, configuration, isInitialController in
-                            return AnimatedViewController(index: index, itemCount: itemCount, fetchImageBlock: myFetchImageBlock, configuration: configuration, isInitialController: isInitialController)
+                        //Otherwise our image is actually an image, so we make it so that the image shows
+                        else if asset.mediaType == .image{
+                            //Add the proper file extension to the filename
+                            title = title + ".jpg"
+                            self.imageFileNames.append(title)
+                            //Convert the image to data (currently only supporting JPEG, may increase support as time goes on)
+                            let imagePath = self.imagesDirectoryPath.appending("/\(title)")
+                            var data = UIImageJPEGRepresentation(image!, 1.0)
+                            data?.addJunkHeader()
+                            //Save the image to disk
+                            let success = FileManager.default.createFile(atPath: imagePath, contents: data, attributes: nil)
+                            if success == false {
+                                os_log("Failed to save image...", log: OSLog.default, type: .error)
+                            }
+                            //Store a custom fetch image function in a variable
+                            let myFetchImageBlock: FetchImageBlock = {
+                                //When called, this function loads the selected full quality image into memory
+                                var fetchedData = FileManager.default.contents(atPath: imagePath)
+                                fetchedData?.removeJunkHeader()
+                                let fetchedImage = UIImage(data: fetchedData!)
+                                $0(fetchedImage)
+                            }
+                            
+                            let itemViewControllerBlock: ItemViewControllerBlock = { index, itemCount, fetchImageBlock, configuration, isInitialController in
+                                return AnimatedViewController(index: index, itemCount: itemCount, fetchImageBlock: myFetchImageBlock, configuration: configuration, isInitialController: isInitialController)
+                            }
+                            //Create a new gallery item containing the two custom functions defined above.
+                            let galleryItem = GalleryItem.custom(fetchImageBlock: myFetchImageBlock, itemViewControllerBlock: itemViewControllerBlock)
+                            //Add the thumbnail images and it's corresponding galleryItem to our imageArray as a new Image object
+                            self.images.append(Image.init(thumbnail: thumbnail, galleryItem: galleryItem))
                         }
-                        //Create a new gallery item containing the two custom functions defined above.
-                        let galleryItem = GalleryItem.custom(fetchImageBlock: myFetchImageBlock, itemViewControllerBlock: itemViewControllerBlock)
-                        //Add the thumbnail images and it's corresponding galleryItem to our imageArray as a new Image object
-                        self.images.append(Image.init(thumbnail: thumbnail, galleryItem: galleryItem))
-                        
+                        //If it's not an image or a video, what is it? Something fucked up somewhere, this shouldn't happen. Like ever.
+                        else{
+                            //This shouldn't happen.
+                        }
                         //Grab the main thread and update the progress bar. By launching saveNewImages as an async task, the main thread is not blocked. So when we go to grab it and update the UI, the UI will actually update.
                         DispatchQueue.main.sync {
                             progress = progress + incrementValue
@@ -277,10 +324,11 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             var data = FileManager.default.contents(atPath: imagesDirectoryPath.appending("/\(thumbnailPath)"))
             data?.removeJunkHeader()
             let image = UIImage(data: data!)
+            
             //Store a custom fetch image function in a variable
             let myFetchImageBlock: FetchImageBlock = {
                 //When called, this function loads the selected full quality image into memory
-                var fetchedData = FileManager.default.contents(atPath: self.imagesDirectoryPath.appending("/\(imagePath)"))
+                var fetchedData = FileManager.default.contents(atPath: self.imagesDirectoryPath.appending("/\(imagePath.components(separatedBy: ".")[0] + ".jpg")"))
                 fetchedData?.removeJunkHeader()
                 let fetchedImage = UIImage(data: fetchedData!)
                 $0(fetchedImage)
@@ -290,7 +338,12 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
                 return AnimatedViewController(index: index, itemCount: itemCount, fetchImageBlock: myFetchImageBlock, configuration: configuration, isInitialController: isInitialController)
            }
             //Create a new gallery item containing the two custom functions defined above.
-            let galleryItem = GalleryItem.custom(fetchImageBlock: myFetchImageBlock, itemViewControllerBlock: itemViewControllerBlock)
+            var galleryItem = GalleryItem.custom(fetchImageBlock: myFetchImageBlock, itemViewControllerBlock: itemViewControllerBlock)
+            //If we're actually loading a video file, then change the GalleryItem to handle that
+            if imagePath.components(separatedBy: ".")[1] == "mp4"{
+                galleryItem = GalleryItem.video(fetchPreviewImageBlock: myFetchImageBlock, videoURL:  URL (fileURLWithPath: self.imagesDirectoryPath.appending("/\(imagePath)")))
+            }
+            
             //Add the thumbnail images and it's corresponding galleryItem to our imageArray as a new Image object
             images.append(Image.init(thumbnail: image!, galleryItem: galleryItem))
         }
@@ -307,6 +360,9 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             do {
                 try FileManager.default.removeItem(atPath: imagesDirectoryPath.appending("/\(thumbnailPath)"))
                 try FileManager.default.removeItem(atPath: imagesDirectoryPath.appending("/\(imagePath)"))
+                if imagePath.components(separatedBy: ".")[1] == ".mp4"{
+                    try FileManager.default.removeItem(atPath: imagesDirectoryPath.appending("/\(imagePath.components(separatedBy: ".")[0] + ".jpg")"))
+                }
             }
             catch{
                 os_log("Failed to delete image & thumbnail...", log: OSLog.default, type: .error)
@@ -540,7 +596,6 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     }
     
     func galleryConfiguration() -> GalleryConfiguration {
-        
         return [
             
             GalleryConfigurationItem.footerViewLayout(.pinBoth(0, 0, 0)),
