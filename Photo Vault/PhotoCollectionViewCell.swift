@@ -11,6 +11,7 @@ import UIKit
 class PhotoCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var checkMark: SSCheckMark!
+    @IBOutlet weak var timeStamp: CustomPaddingLabel!
     
     override var isSelected: Bool {
         didSet {

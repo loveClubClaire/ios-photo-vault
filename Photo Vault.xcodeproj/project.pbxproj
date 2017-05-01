@@ -11,6 +11,7 @@
 		C04BECB21E81C255006C858D /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04BECB11E81C255006C858D /* CustomNavigationBar.swift */; };
 		C04BECB51E8312EC006C858D /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04BECB41E8312EC006C858D /* UIImage+Extension.swift */; };
 		C04BECB91E83512F006C858D /* BackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = C04BECB81E83512F006C858D /* BackArrow.png */; };
+		C05490891EB70907001E9449 /* CustomPaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C05490881EB70907001E9449 /* CustomPaddingLabel.swift */; };
 		C080EFDB1E5EA5590072C55F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080EFDA1E5EA5590072C55F /* AppDelegate.swift */; };
 		C080EFE21E5EA5590072C55F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C080EFE01E5EA5590072C55F /* Main.storyboard */; };
 		C080EFE41E5EA5590072C55F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C080EFE31E5EA5590072C55F /* Assets.xcassets */; };
@@ -54,6 +55,7 @@
 		C04BECB11E81C255006C858D /* CustomNavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
 		C04BECB41E8312EC006C858D /* UIImage+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		C04BECB81E83512F006C858D /* BackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BackArrow.png; sourceTree = "<group>"; };
+		C05490881EB70907001E9449 /* CustomPaddingLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPaddingLabel.swift; sourceTree = "<group>"; };
 		C080EFD71E5EA5590072C55F /* Photo Vault.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Photo Vault.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C080EFDA1E5EA5590072C55F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C080EFE11E5EA5590072C55F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 		C080F0111E64BF300072C55F /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				C05490881EB70907001E9449 /* CustomPaddingLabel.swift */,
 				C0B335441E8D916200D4091D /* CustomUIButton.swift */,
 				C04BECB11E81C255006C858D /* CustomNavigationBar.swift */,
 				C04BECB41E8312EC006C858D /* UIImage+Extension.swift */,
@@ -426,6 +429,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C05490891EB70907001E9449 /* CustomPaddingLabel.swift in Sources */,
 				C04BECB21E81C255006C858D /* CustomNavigationBar.swift in Sources */,
 				C0B3354D1E93392800D4091D /* Data+Extension.swift in Sources */,
 				C080EFDB1E5EA5590072C55F /* AppDelegate.swift in Sources */,

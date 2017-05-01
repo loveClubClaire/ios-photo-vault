@@ -11,7 +11,8 @@ import UIKit
 class PhotoSelectorCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var checkMark: SSCheckMark!
-    
+    @IBOutlet weak var timeStamp: CustomPaddingLabel!
+        
     override var isSelected: Bool {
         didSet {
             checkMark.backgroundColor = UIColor.clear

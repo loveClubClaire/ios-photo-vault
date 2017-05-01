@@ -22,6 +22,7 @@ class PhotoSelectorCollectionViewController: UICollectionViewController, UIColle
     var images = [UIImage]()
     var imagesAlbum = PHAssetCollection()
     var photosCollectionViewController: PhotosCollectionViewController?
+    var photoTimeStamps = [Double]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,6 +73,13 @@ class PhotoSelectorCollectionViewController: UICollectionViewController, UIColle
         
         // Configure the cell
         cell.imageView.image = images[indexPath.row]
+        if photoTimeStamps[indexPath.row] != 0.0{
+            cell.timeStamp.text = secondsToHoursMinutesSeconds(seconds: Int(photoTimeStamps[indexPath.row]))
+            cell.timeStamp.isHidden = false
+        }
+        else{
+            cell.timeStamp.isHidden = true
+        }
         return cell
     }
     
@@ -119,6 +127,27 @@ class PhotoSelectorCollectionViewController: UICollectionViewController, UIColle
         selectedImages.remove(object: indexPath.row)
         if selectedImages.count == 0 {
             navigationItem.rightBarButtonItem?.isEnabled = false
+        }
+    }
+    
+    //MARK: Custom Methods
+    func secondsToHoursMinutesSeconds (seconds : Int) -> String {
+        let hours = (seconds / 3600)
+        let minutes = (seconds % 3600) / 60
+        let seconds = (seconds % 3600) % 60
+        
+        if hours > 0{
+            var result = ""
+            if hours < 10{result = result + "0\(hours):"}else{result = result + "\(hours):"}
+            if minutes < 10{result = result + "0\(minutes):"}else{result = result + "\(minutes):"}
+            if seconds < 10{result = result + "0\(seconds)"}else{result = result + "\(seconds)"}
+            return result
+        }
+        else{
+            var result = ""
+            if minutes < 10{result = result + "0\(minutes):"}else{result = result + "\(minutes):"}
+            if seconds < 10{result = result + "0\(seconds)"}else{result = result + "\(seconds)"}
+            return result
         }
     }
 }

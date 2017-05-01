@@ -23,7 +23,7 @@ class PhotoSelectorTableViewController: UITableViewController {
     
     var photosCollectionViewController: PhotosCollectionViewController?
     var photoAlbums = [photoAlbum]()
-    
+    var photoTimeStamps = [Double]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,6 +87,7 @@ class PhotoSelectorTableViewController: UITableViewController {
             viewController.images = getAlbumPhotos(anAlbum: photoAlbums[indexPath.row].identifier)
             viewController.imagesAlbum = photoAlbums[indexPath.row].identifier
             viewController.photosCollectionViewController = self.photosCollectionViewController
+            viewController.photoTimeStamps = self.photoTimeStamps; self.photoTimeStamps.removeAll()
         default:
             fatalError("Unexpected Segue Identifier; \(segue.identifier)")
         }
@@ -145,6 +146,9 @@ class PhotoSelectorTableViewController: UITableViewController {
         
         photoAssets.enumerateObjects({(object, count, stop) in
             if let asset = object as? PHAsset{
+                
+                self.photoTimeStamps.append(asset.duration)
+                
                 //Make the image size the exact size of the cell. Do it for speed. "Gotta go fast"
                 let itemsPerRow: CGFloat = 4
                 var widthPerItem = floor(self.view.frame.width / itemsPerRow)

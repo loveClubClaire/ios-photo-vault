@@ -35,6 +35,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     var albumName: String?
     var imagesDirectoryPath: String!
     
+    var photoTimeStamps = [Double]()
+    
     let numJunkBytes = 50
     
     override func viewDidLoad() {
@@ -63,6 +65,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         self.navigationItem.title = albumName
         //Allow multiple images to be selected
         self.collectionView?.allowsMultipleSelection = true
+        //Reterive photoTimeStamps array from core data
+        photoTimeStamps = UserDefaults.standard.array(forKey: "photoTimeStamps") as? [Double] ?? [Double]()
     }
 
     override func didReceiveMemoryWarning() {
@@ -85,6 +89,13 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         }
         // Configure the cell
         cell.imageView.image = images[indexPath.row].thumbnail
+        if photoTimeStamps[indexPath.row] != 0.0{
+            cell.timeStamp.text = secondsToHoursMinutesSeconds(seconds: Int(photoTimeStamps[indexPath.row]))
+            cell.timeStamp.isHidden = false
+        }
+        else{
+            cell.timeStamp.isHidden = true
+        }
         return cell
     }
 
@@ -182,6 +193,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         photoAssets.enumerateObjects({(object, count, stop) in
             if self.selectedImages.contains(count){
                 if let asset = object as? PHAsset{
+                    self.photoTimeStamps.append(asset.duration)
                     //We're getting the high quality version of each image
                     let options = PHImageRequestOptions()
                     options.deliveryMode = .highQualityFormat
@@ -312,6 +324,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         selectedImages.removeAll()
         //Save the image file names
         NSKeyedArchiver.archiveRootObject(imageFileNames, toFile: imagesDirectoryPath.appending("/\(albumName!)_albumPictures"))
+        //Save the photoTimeStamps
+        UserDefaults.standard.set(photoTimeStamps, forKey: "photoTimeStamps")
     }
 
     func loadImages(){
@@ -352,6 +366,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     func deleteImages(_ selectedImages: IndexSet){
         var selectedElements = [String]()
         for index in selectedImages{
+            photoTimeStamps.remove(at: index)
             selectedElements.append(imageFileNames[index])
         }
         
@@ -371,6 +386,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         let remainingFileNames = imageFileNames.filter{!selectedElements.contains($0)}
         imageFileNames = remainingFileNames
         NSKeyedArchiver.archiveRootObject(remainingFileNames, toFile: imagesDirectoryPath.appending("/\(albumName!)_albumPictures"))
+        UserDefaults.standard.set(photoTimeStamps, forKey: "photoTimeStamps")
     }
     
     
@@ -779,6 +795,26 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     
 }
 
+//MARK: Custom Methods
+func secondsToHoursMinutesSeconds (seconds : Int) -> String {
+    let hours = (seconds / 3600)
+    let minutes = (seconds % 3600) / 60
+    let seconds = (seconds % 3600) % 60
+    
+    if hours > 0{
+        var result = ""
+        if hours < 10{result = result + "0\(hours):"}else{result = result + "\(hours):"}
+        if minutes < 10{result = result + "0\(minutes):"}else{result = result + "\(minutes):"}
+        if seconds < 10{result = result + "0\(seconds)"}else{result = result + "\(seconds)"}
+        return result
+    }
+    else{
+        var result = ""
+        if minutes < 10{result = result + "0\(minutes):"}else{result = result + "\(minutes):"}
+        if seconds < 10{result = result + "0\(seconds)"}else{result = result + "\(seconds)"}
+        return result
+    }
+}
 
 
 // MARK: - ImageView Extensions
