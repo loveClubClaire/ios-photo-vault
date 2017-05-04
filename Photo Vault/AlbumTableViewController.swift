@@ -60,6 +60,7 @@ class AlbumTableViewController: UITableViewController {
             let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
             let destroyAction = UIAlertAction(title: "Delete", style: .destructive, handler: {(action : UIAlertAction!) -> Void in
                 // Remove the images from the applciation
+                UserDefaults.standard.set(nil, forKey: "\(self.albums[indexPath.row])photoTimeStamps")
                 let documentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!.path
                 let imagesDirectoryPath = documentsDirectory.appending("/Photos")
                 let imageFileNames = (NSKeyedUnarchiver.unarchiveObject(withFile: imagesDirectoryPath.appending("/\(self.albums[indexPath.row])_albumPictures")) as? [String]) ?? []

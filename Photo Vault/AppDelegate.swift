@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var authenticated = false
+    var actuallyResignActive = true
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -33,17 +34,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
-        authenticated = false
-        application.ignoreSnapshotOnNextApplicationLaunch()
-        if UIApplication.shared.keyWindow?.rootViewController?.restorationIdentifier == "AlbumTableViewNavigation"{
-            let colorView = UIImageView(frame: (self.window?.frame)!)
-            colorView.tag = 999
-            colorView.backgroundColor = UIColor.black
-            colorView.image = #imageLiteral(resourceName: "PhotoVaultSolidBlack.png")
-            colorView.contentMode = .scaleAspectFit
-            colorView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
-            self.window?.addSubview(colorView)
-            self.window?.bringSubview(toFront: colorView)
+        if actuallyResignActive == true{
+            authenticated = false
+            application.ignoreSnapshotOnNextApplicationLaunch()
+            if UIApplication.shared.keyWindow?.rootViewController?.restorationIdentifier == "AlbumTableViewNavigation"{
+                let colorView = UIImageView(frame: (self.window?.frame)!)
+                colorView.tag = 999
+                colorView.backgroundColor = UIColor.black
+                colorView.image = #imageLiteral(resourceName: "PhotoVaultSolidBlack.png")
+                colorView.contentMode = .scaleAspectFit
+                colorView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
+                self.window?.addSubview(colorView)
+                self.window?.bringSubview(toFront: colorView)
+            }
         }
     }
 
