@@ -202,6 +202,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
                     options.isSynchronous = true
                     //When we have an image
                     _ = autoreleasepool(invoking: {
+                        //Really should change this requestImage to requestImageData but I'm lazy and this works. (Thank you autoreleasepool)
                         imageManager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFill, options: options, resultHandler: {
                             (image, info) -> Void in
                             //Create a file name for the image
@@ -267,10 +268,25 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
                                 //Add the proper file extension to the filename
                                 title = title + ".jpg"
                                 self.imageFileNames.append(title)
-                                //Convert the image to data (currently only supporting JPEG, may increase support as time goes on)
+                                //Convert the image to data
                                 let imagePath = self.imagesDirectoryPath.appending("/\(title)")
-                                var data = UIImageJPEGRepresentation(image!, 1.0)
-                                data?.addJunkHeader()
+                                var data = Data()
+                                //Check to see if the image is a gif or not
+                                let resourceList = PHAssetResource.assetResources(for: asset)
+                                for resource in resourceList{
+                                    //If it's a gif, re-request the image as raw data. This raw data has all our gif's frames
+                                    if resource.uniformTypeIdentifier == "com.compuserve.gif"{
+                                    imageManager.requestImageData(for: asset, options: options, resultHandler: {
+                                         (aData, string, imageOrientation, thing) -> Void in
+                                        data = aData!
+                                    })
+                                    }
+                                    //If it's not a gif, get the data of our image
+                                    else{
+                                        data = UIImageJPEGRepresentation(image!, 1.0)!
+                                    }
+                                }
+                                data.addJunkHeader()
                                 //Save the image to disk
                                 let success = FileManager.default.createFile(atPath: imagePath, contents: data, attributes: nil)
                                 if success == false {
@@ -281,7 +297,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
                                     //When called, this function loads the selected full quality image into memory
                                     var fetchedData = FileManager.default.contents(atPath: imagePath)
                                     fetchedData?.removeJunkHeader()
-                                    let fetchedImage = UIImage(data: fetchedData!)
+                                    //let fetchedImage = UIImage(data: fetchedData!)
+                                    let fetchedImage = UIImage.gif(data: fetchedData!)
                                     $0(fetchedImage)
                                 }
                                 
@@ -296,6 +313,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
                                 //If it's not an image or a video, what is it? Something fucked up somewhere, this shouldn't happen. Like ever.
                             else{
                                 //This shouldn't happen.
+                                os_log("Not a video nor an image. Wut?", log: OSLog.default, type: .error)
                             }
                             //Grab the main thread and update the progress bar. By launching saveNewImages as an async task, the main thread is not blocked. So when we go to grab it and update the UI, the UI will actually update.
                             DispatchQueue.main.sync {
@@ -367,7 +385,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
                 //When called, this function loads the selected full quality image into memory
                 var fetchedData = FileManager.default.contents(atPath: self.imagesDirectoryPath.appending("/\(imagePath.components(separatedBy: ".")[0] + ".jpg")"))
                 fetchedData?.removeJunkHeader()
-                let fetchedImage = UIImage(data: fetchedData!)
+                let fetchedImage = UIImage.gif(data: fetchedData!)
                 $0(fetchedImage)
             }
             
@@ -600,6 +618,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         }
         
         galleryViewController.swipedToDismissCompletion = {self.showStatusBar = true}
+            
         showStatusBar = false
         self.setNeedsStatusBarAppearanceUpdate()
         
@@ -848,6 +867,7 @@ extension PhotosCollectionViewController: GalleryDisplacedViewsDataSource {
             guard let cell = self.collectionView?.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: IndexPath.init(row: index, section: 0)) as? PhotoCollectionViewCell else{
                 fatalError("Unexpected cell type")
             }
+            cell.imageView.image = self.images[index].thumbnail
             return cell.imageView
         }
         else{

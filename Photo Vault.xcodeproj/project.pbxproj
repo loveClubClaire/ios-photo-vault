@@ -31,6 +31,7 @@
 		C0B3354D1E93392800D4091D /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B3354C1E93392800D4091D /* Data+Extension.swift */; };
 		C0B3354F1E93403400D4091D /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0B3354E1E93403400D4091D /* LocalAuthentication.framework */; };
 		C0B335551E9340BB00D4091D /* PITouchIDManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B335541E9340BB00D4091D /* PITouchIDManager.swift */; };
+		C0B990DC1EBBE13A0019AC3F /* UIImage+Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B990DB1EBBE13A0019AC3F /* UIImage+Gif.swift */; };
 		C0CC36B71E937057008A7922 /* PhotoVaultSolidBlack.png in Resources */ = {isa = PBXBuildFile; fileRef = C0CC36B61E937057008A7922 /* PhotoVaultSolidBlack.png */; };
 		C0DCCB681E84C4FE006D1984 /* AddToAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DCCB671E84C4FE006D1984 /* AddToAlbumTableViewController.swift */; };
 		F787C2B769AA311D8A716E37 /* Pods_Photo_VaultTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B27D5E62667323BD8A2EF90 /* Pods_Photo_VaultTests.framework */; };
@@ -79,6 +80,7 @@
 		C0B3354C1E93392800D4091D /* Data+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
 		C0B3354E1E93403400D4091D /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		C0B335541E9340BB00D4091D /* PITouchIDManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PITouchIDManager.swift; sourceTree = "<group>"; };
+		C0B990DB1EBBE13A0019AC3F /* UIImage+Gif.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Gif.swift"; sourceTree = "<group>"; };
 		C0CC36B61E937057008A7922 /* PhotoVaultSolidBlack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PhotoVaultSolidBlack.png; sourceTree = "<group>"; };
 		C0CC36B81E937828008A7922 /* Photo Vault.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Photo Vault.entitlements"; sourceTree = "<group>"; };
 		C0DCCB671E84C4FE006D1984 /* AddToAlbumTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddToAlbumTableViewController.swift; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 				C05490881EB70907001E9449 /* CustomPaddingLabel.swift */,
 				C0B335441E8D916200D4091D /* CustomUIButton.swift */,
 				C04BECB11E81C255006C858D /* CustomNavigationBar.swift */,
+				C0B990DB1EBBE13A0019AC3F /* UIImage+Gif.swift */,
 				C04BECB41E8312EC006C858D /* UIImage+Extension.swift */,
 				C0B3354C1E93392800D4091D /* Data+Extension.swift */,
 				C080F0121E64BF6F0072C55F /* Array+Extension.swift */,
@@ -277,6 +280,7 @@
 					C080EFD61E5EA5590072C55F = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = P87XK5R228;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.DataProtection = {
@@ -447,6 +451,7 @@
 				C080F0011E5F8E790072C55F /* AlbumTableViewCell.swift in Sources */,
 				C0B335471E8D9AA500D4091D /* DetailViewController.swift in Sources */,
 				C080F0031E5F94D80072C55F /* PhotosCollectionViewController.swift in Sources */,
+				C0B990DC1EBBE13A0019AC3F /* UIImage+Gif.swift in Sources */,
 				C080F0081E639AD00072C55F /* PhotoSelectorTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -579,6 +584,7 @@
 			baseConfigurationReference = B30D136DEAB35101EEC7A8B0 /* Pods-Photo Vault.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Photo Vault/Photo Vault.entitlements";
 				DEVELOPMENT_TEAM = P87XK5R228;
 				INFOPLIST_FILE = "Photo Vault/Info.plist";
@@ -586,6 +592,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "sixteensquared.Photo-Vault";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -595,6 +603,7 @@
 			baseConfigurationReference = 0C5EEE2295C73382891817B5 /* Pods-Photo Vault.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Photo Vault/Photo Vault.entitlements";
 				DEVELOPMENT_TEAM = P87XK5R228;
 				INFOPLIST_FILE = "Photo Vault/Info.plist";
@@ -602,6 +611,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "sixteensquared.Photo-Vault";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
