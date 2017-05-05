@@ -1,0 +1,6 @@
+framework module Pods_Photo_VaultTests {
+  umbrella header "Pods-Photo VaultTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,15 @@
+PODS:
+  - ImageViewer (4.0)
+  - RPCircularProgress (0.3.0)
+
+DEPENDENCIES:
+  - ImageViewer (= 4.0.0)
+  - RPCircularProgress (= 0.3.0)
+
+SPEC CHECKSUMS:
+  ImageViewer: 364abc0309c33dda86d08ca25b0243e5c67d8cd3
+  RPCircularProgress: 46bee24642e0cb8de53f49e6c85733b9c45dee33
+
+PODFILE CHECKSUM: 950a5cdd6630ef01ddfa838edb154d5985dcd6d5
+
+COCOAPODS: 1.2.0
