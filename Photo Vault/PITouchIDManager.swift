@@ -36,7 +36,7 @@ class PITouchIDManager {
                                     }
                                 } else {
                                     DispatchQueue.main.async {
-                                        failure(error as! NSError)
+                                        failure(error! as NSError)
                                     }
                                 }
         })

@@ -135,7 +135,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             }
             viewController.photosCollectionViewController = self
         default:
-            fatalError("Unexpected Segue Identifier; \(segue.identifier)")
+            fatalError("Unexpected Segue Identifier; \(segue.identifier ?? "")")
         }
     }
     
@@ -613,7 +613,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             var data = FileManager.default.contents(atPath: self.imagesDirectoryPath + "/" + self.imageFileNames[index])
             data?.removeJunkHeader()
             let images = [UIImage(data: data!)]
-            let activityViewController = UIActivityViewController(activityItems: images, applicationActivities: nil)
+            let activityViewController = UIActivityViewController(activityItems: [images as Any], applicationActivities: nil)
             galleryViewController.present(activityViewController, animated: true, completion: nil)
         }
         

@@ -116,14 +116,14 @@ class AlbumTableViewController: UITableViewController {
                 fatalError("Unexpected destination: \(segue.destination)")
             }
             guard let selectedTimerCell = sender as? AlbumTableViewCell else {
-                fatalError("Unexpected sender: \(sender)")
+                fatalError("Unexpected sender: \(sender ?? "")")
             }
             guard let indexPath = tableView.indexPath(for: selectedTimerCell) else {
                 fatalError("The selected cell is not being displayed by the table")
             }
             viewController.albumName = albums[indexPath.row]
         default:
-            fatalError("Unexpected Segue Identifier; \(segue.identifier)")
+            fatalError("Unexpected Segue Identifier; \(segue.identifier ?? "")")
         }
     }
     

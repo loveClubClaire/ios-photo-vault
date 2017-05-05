@@ -79,7 +79,7 @@ class PhotoSelectorTableViewController: UITableViewController {
                 fatalError("Unexpected destination: \(segue.destination)")
             }
             guard let selectedTimerCell = sender as? PhotoSelectorTableViewCell else {
-                fatalError("Unexpected sender: \(sender)")
+                fatalError("Unexpected sender: \(sender ?? "")")
             }
             guard let indexPath = tableView.indexPath(for: selectedTimerCell) else {
                 fatalError("The selected cell is not being displayed by the table")
@@ -89,7 +89,7 @@ class PhotoSelectorTableViewController: UITableViewController {
             viewController.photosCollectionViewController = self.photosCollectionViewController
             viewController.photoTimeStamps = self.photoTimeStamps; self.photoTimeStamps.removeAll()
         default:
-            fatalError("Unexpected Segue Identifier; \(segue.identifier)")
+            fatalError("Unexpected Segue Identifier; \(segue.identifier ?? "")")
         }
     }
     
