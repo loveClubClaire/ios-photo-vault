@@ -4,7 +4,7 @@ A photo vault application for iOS, programmed in Swift 3. The idea was to provid
 ## Major features include:
 * `Image support` 
 * `Video support`
-* `Gif support`: animated images move when displayed
+* `Gif support`: Animated images move when displayed
 * `TouchID protected` 
 
 # Supporting Projects
