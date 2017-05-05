@@ -585,7 +585,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         trashButtonClosure = {
             let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-            let destroyAction = UIAlertAction(title: "Delete Photo", style: .destructive, handler: {(action : UIAlertAction!) -> Void in
+            let destroyAction = UIAlertAction(title: "Delete Item", style: .destructive, handler: {(action : UIAlertAction!) -> Void in
                 let index = Int((countLabel.text?.components(separatedBy: " of ")[0])!)! - 1
                 self.images.remove(at: index)
                 self.deleteImages([index])
@@ -774,8 +774,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             if (selectedItems?.count)! > 0 {
                 let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-                var title = "Delete \(selectedItems!.count) Photos"
-                if selectedItems?.count == 1{ title = "Delete Photo" }
+                var title = "Delete \(selectedItems!.count) Items"
+                if selectedItems?.count == 1{ title = "Delete Item" }
                 let destroyAction = UIAlertAction(title: title, style: .destructive, handler: {(action : UIAlertAction!) -> Void in
                     let sortedSelectedItems = selectedItems?.sorted{$0.row > $1.row}
                     for indexPath in sortedSelectedItems!{

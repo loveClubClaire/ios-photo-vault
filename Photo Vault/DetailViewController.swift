@@ -43,16 +43,28 @@ class DetailViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    override var previewActionItems: [UIPreviewActionItem]{
-        let likeAction = UIPreviewAction(title: "Like", style: .default) { (action, viewController) -> Void in
-            print("You liked the photo")
-        }
-        
-        let deleteAction = UIPreviewAction(title: "Delete", style: .destructive) { (action, viewController) -> Void in
-            print("You deleted the photo")
-        }
-        
-        return [likeAction, deleteAction]
-    }
+    //TODO --> Implement this if you want
+//    override var previewActionItems: [UIPreviewActionItem]{
+//        
+//        var mainView: PhotosCollectionViewController?
+//        if var topController = UIApplication.shared.keyWindow?.rootViewController {
+//            while let presentedViewController = topController.presentedViewController {
+//                topController = presentedViewController
+//                if presentedViewController is PhotosCollectionViewController{
+//                    mainView = topController as? PhotosCollectionViewController
+//                }
+//            }
+//        }
+//        
+//        let likeAction = UIPreviewAction(title: "Like", style: .default) { (action, viewController) -> Void in
+//            print("You liked the photo")
+//        }
+//        
+//        let deleteAction = UIPreviewAction(title: "Delete", style: .destructive) { (action, viewController) -> Void in
+//            print("You deleted the photo")
+//            mainView?.trashButtonClosure()
+//        }
+//        
+//        return [likeAction, deleteAction]
+//    }
 }
