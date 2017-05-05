@@ -78,6 +78,14 @@ class VideoViewController: ItemBaseController<VideoView> {
 
     func playVideoInitially() {
 
+        do{
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            try AVAudioSession.sharedInstance().setActive(true)
+        }
+        catch{
+            
+        }
+        
         let player = AVPlayer(url: videoURL)
         let playerViewController = AVPlayerViewController()
         playerViewController.player = player
