@@ -9,7 +9,9 @@ A photo vault application for iOS, programmed in Swift 3. The idea was to provid
 
 # Supporting Projects
 This application uses 
+
 https://github.com/bahlo/SwiftGif --> a Swift extension for gif support 
+
 https://github.com/MailOnline/ImageViewer --> an image viewer project used for displaying and scrolling through images. 
 
 # Misc
