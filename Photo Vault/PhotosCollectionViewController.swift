@@ -610,10 +610,17 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         
         exportButtonClosure = {
             let index = Int((countLabel.text?.components(separatedBy: " of ")[0])!)! - 1
-            var data = FileManager.default.contents(atPath: self.imagesDirectoryPath + "/" + self.imageFileNames[index])
-            data?.removeJunkHeader()
-            let images = [UIImage(data: data!)]
-            let activityViewController = UIActivityViewController(activityItems: [images as Any], applicationActivities: nil)
+            var itemsToExport = [Any]()
+            
+            if self.imageFileNames[index].components(separatedBy: ".")[1] == "mp4"{
+                itemsToExport = [URL(fileURLWithPath: self.imagesDirectoryPath + "/" + self.imageFileNames[index])]
+            }
+            else{
+                var data = FileManager.default.contents(atPath: self.imagesDirectoryPath + "/" + self.imageFileNames[index])
+                data?.removeJunkHeader()
+                itemsToExport = [UIImage(data: data!)!]
+            }
+            let activityViewController = UIActivityViewController(activityItems: itemsToExport, applicationActivities: nil)
             galleryViewController.present(activityViewController, animated: true, completion: nil)
         }
         
@@ -808,12 +815,17 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
 
         exportButtonClosure = {
             let selectedItems = self.collectionView?.indexPathsForSelectedItems
-            var images = [UIImage]()
+            var images = [Any]()
             for indexPath in selectedItems!{
-                var data = FileManager.default.contents(atPath: self.imagesDirectoryPath + "/" + self.imageFileNames[indexPath.row])
-                data?.removeJunkHeader()
-                let image = UIImage(data: data!)
-                images.append(image!)
+                if self.imageFileNames[indexPath.row].components(separatedBy: ".")[1] == "mp4"{
+                    images.append(URL(fileURLWithPath: self.imagesDirectoryPath + "/" + self.imageFileNames[indexPath.row]))
+                }
+                else{
+                    var data = FileManager.default.contents(atPath: self.imagesDirectoryPath + "/" + self.imageFileNames[indexPath.row])
+                    data?.removeJunkHeader()
+                    let image = UIImage(data: data!)
+                    images.append(image!)
+                }
             }
             let activityViewController = UIActivityViewController(activityItems: images, applicationActivities: nil)
             self.present(activityViewController, animated: true, completion: nil)
