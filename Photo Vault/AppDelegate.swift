@@ -60,6 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 self.window?.addSubview(colorView)
                 self.window?.bringSubview(toFront: colorView)
             }
+            UIApplication.dismissOpenAlerts()
         }
     }
 

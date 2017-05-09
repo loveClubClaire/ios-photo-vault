@@ -24,6 +24,7 @@
 		C080F00E1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F00D1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift */; };
 		C080F0101E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F00F1E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift */; };
 		C085EFA51EC15053002AA9C4 /* IDWhite.png in Resources */ = {isa = PBXBuildFile; fileRef = C085EFA41EC15053002AA9C4 /* IDWhite.png */; };
+		C085EFA71EC16E25002AA9C4 /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C085EFA61EC16E25002AA9C4 /* UIApplication+Extension.swift */; };
 		C0B335451E8D916200D4091D /* CustomUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B335441E8D916200D4091D /* CustomUIButton.swift */; };
 		C0B335471E8D9AA500D4091D /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B335461E8D9AA500D4091D /* DetailViewController.swift */; };
 		C0B3354B1E93079400D4091D /* SSCheckMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B3354A1E93079400D4091D /* SSCheckMark.swift */; };
@@ -74,6 +75,7 @@
 		C080F00D1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoSelectorCollectionViewController.swift; sourceTree = "<group>"; };
 		C080F00F1E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
 		C085EFA41EC15053002AA9C4 /* IDWhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IDWhite.png; sourceTree = "<group>"; };
+		C085EFA61EC16E25002AA9C4 /* UIApplication+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extension.swift"; sourceTree = "<group>"; };
 		C0B335441E8D916200D4091D /* CustomUIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomUIButton.swift; sourceTree = "<group>"; };
 		C0B335461E8D9AA500D4091D /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		C0B3354A1E93079400D4091D /* SSCheckMark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSCheckMark.swift; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 			children = (
 				C0CC36B81E937828008A7922 /* Photo Vault.entitlements */,
 				C080EFDA1E5EA5590072C55F /* AppDelegate.swift */,
+				C085EFA61EC16E25002AA9C4 /* UIApplication+Extension.swift */,
 				C0B335541E9340BB00D4091D /* PITouchIDManager.swift */,
 				C0B3354A1E93079400D4091D /* SSCheckMark.swift */,
 				C080F0061E63999E0072C55F /* Photo Selector */,
@@ -450,6 +453,7 @@
 				C0DCCB681E84C4FE006D1984 /* AddToAlbumTableViewController.swift in Sources */,
 				C0B335551E9340BB00D4091D /* PITouchIDManager.swift in Sources */,
 				C080F00E1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift in Sources */,
+				C085EFA71EC16E25002AA9C4 /* UIApplication+Extension.swift in Sources */,
 				C0B3354B1E93079400D4091D /* SSCheckMark.swift in Sources */,
 				C080F0011E5F8E790072C55F /* AlbumTableViewCell.swift in Sources */,
 				C0B335471E8D9AA500D4091D /* DetailViewController.swift in Sources */,
