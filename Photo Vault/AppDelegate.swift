@@ -17,8 +17,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var authenticated = false
     var actuallyResignActive = true
+    var showTouchID = UIButton()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        //Initalize our showTouchID button
+        let screenSize = UIScreen.main.bounds
+        let screenWidth = screenSize.width
+        let screenHeight = screenSize.height
+        showTouchID.setImage(#imageLiteral(resourceName: "IDWhite.png"), for: .normal)
+        showTouchID.frame = CGRect(x: screenWidth / 2 - 25, y: screenHeight * 0.75 - 25, width: 50.0, height: 50.0)
+        showTouchID.addTarget(self, action: #selector(authenticateUser), for: .touchUpInside)
+        showTouchID.isHidden = true
+        self.window?.rootViewController?.view.addSubview(showTouchID)
         // Override point for customization after application launch.
         authenticateUser()
         //If photo library authorization has not been determined, attempt to access the photo library on app launch to trigger the user notification
@@ -44,6 +54,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 colorView.image = #imageLiteral(resourceName: "PhotoVaultSolidBlack.png")
                 colorView.contentMode = .scaleAspectFit
                 colorView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
+                colorView.addSubview(showTouchID)
+                colorView.isUserInteractionEnabled = true
+                showTouchID.isHidden = true
                 self.window?.addSubview(colorView)
                 self.window?.bringSubview(toFront: colorView)
             }
@@ -61,7 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        if authenticated == false{
+        if authenticated == false && userCanceled == false{
             authenticateUser()
         }
     }
@@ -70,12 +83,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
+    var userCanceled = false
     func authenticateUser() {
         let touchIDManager = PITouchIDManager()
         
         touchIDManager.authenticateUser(success: { () -> () in
             OperationQueue.main.addOperation({ () -> Void in
                 self.authenticated = true
+                self.userCanceled = false
                 let colorView = self.window?.viewWithTag(999)
                 colorView?.removeFromSuperview()
                 if UIApplication.shared.keyWindow?.rootViewController?.restorationIdentifier != "AlbumTableViewNavigation"{
@@ -93,6 +108,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             case LAError.Code.systemCancel.rawValue:
                 print("Authentication cancelled by the system")
             case LAError.Code.userCancel.rawValue:
+                self.userCanceled = true
+                self.showTouchID.isHidden = false
                 print("Authentication cancelled by the user")
             case LAError.Code.userFallback.rawValue:
                 print("User wants to use a password")
@@ -107,6 +124,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             default:
                 print("Authentication failed")
                 OperationQueue.main.addOperation({ () -> Void in
+                    self.showTouchID.isHidden = false
                 })
             }
         })

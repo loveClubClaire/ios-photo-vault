@@ -319,11 +319,13 @@
         <scene sceneID="Uzh-Jv-w9c">
             <objects>
                 <viewController id="1zT-tI-PTN" sceneMemberID="viewController">
-                    <imageView key="view" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PhotoVaultSolidBlack.png" id="aDg-9F-MWj">
+                    <imageView key="view" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PhotoVaultSolidBlack.png" id="aDg-9F-MWj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     </imageView>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8ds-LJ-E3Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

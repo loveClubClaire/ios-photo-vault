@@ -93,6 +93,10 @@ class VideoViewController: ItemBaseController<VideoView> {
             playerViewController.player!.play()
         }
         
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "UIApplicationWillResignActiveNotification"), object: nil, queue: OperationQueue.main, using:{(note: Notification) in
+            playerViewController.player?.pause()
+        })
+        
 //        UIView.animate(withDuration: 0.25, animations: { [weak self] in
 //
 //            self?.embeddedPlayButton.alpha = 0

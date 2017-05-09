@@ -23,6 +23,8 @@
 		C080F0081E639AD00072C55F /* PhotoSelectorTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F0071E639AD00072C55F /* PhotoSelectorTableViewController.swift */; };
 		C080F00E1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F00D1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift */; };
 		C080F0101E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080F00F1E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift */; };
+		C085EFA11EC141FA002AA9C4 /* Touch_ID-512.png in Resources */ = {isa = PBXBuildFile; fileRef = C085EFA01EC141FA002AA9C4 /* Touch_ID-512.png */; };
+		C085EFA51EC15053002AA9C4 /* IDWhite.png in Resources */ = {isa = PBXBuildFile; fileRef = C085EFA41EC15053002AA9C4 /* IDWhite.png */; };
 		C0B335451E8D916200D4091D /* CustomUIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B335441E8D916200D4091D /* CustomUIButton.swift */; };
 		C0B335471E8D9AA500D4091D /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B335461E8D9AA500D4091D /* DetailViewController.swift */; };
 		C0B3354B1E93079400D4091D /* SSCheckMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B3354A1E93079400D4091D /* SSCheckMark.swift */; };
@@ -72,6 +74,8 @@
 		C080F0071E639AD00072C55F /* PhotoSelectorTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoSelectorTableViewController.swift; sourceTree = "<group>"; };
 		C080F00D1E648CEC0072C55F /* PhotoSelectorCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoSelectorCollectionViewController.swift; sourceTree = "<group>"; };
 		C080F00F1E648DD70072C55F /* PhotoSelectorCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoSelectorCollectionViewCell.swift; sourceTree = "<group>"; };
+		C085EFA01EC141FA002AA9C4 /* Touch_ID-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Touch_ID-512.png"; sourceTree = "<group>"; };
+		C085EFA41EC15053002AA9C4 /* IDWhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IDWhite.png; sourceTree = "<group>"; };
 		C0B335441E8D916200D4091D /* CustomUIButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomUIButton.swift; sourceTree = "<group>"; };
 		C0B335461E8D9AA500D4091D /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		C0B3354A1E93079400D4091D /* SSCheckMark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSCheckMark.swift; sourceTree = "<group>"; };
@@ -163,6 +167,8 @@
 				C080EFE01E5EA5590072C55F /* Main.storyboard */,
 				C080EFE31E5EA5590072C55F /* Assets.xcassets */,
 				C0CC36B61E937057008A7922 /* PhotoVaultSolidBlack.png */,
+				C085EFA01EC141FA002AA9C4 /* Touch_ID-512.png */,
+				C085EFA41EC15053002AA9C4 /* IDWhite.png */,
 				C04BECB81E83512F006C858D /* BackArrow.png */,
 				C080EFE81E5EA5590072C55F /* Info.plist */,
 			);
@@ -320,9 +326,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0CC36B71E937057008A7922 /* PhotoVaultSolidBlack.png in Resources */,
+				C085EFA11EC141FA002AA9C4 /* Touch_ID-512.png in Resources */,
 				C04BECB91E83512F006C858D /* BackArrow.png in Resources */,
 				C080EFE41E5EA5590072C55F /* Assets.xcassets in Resources */,
 				C080EFE21E5EA5590072C55F /* Main.storyboard in Resources */,
+				C085EFA51EC15053002AA9C4 /* IDWhite.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
